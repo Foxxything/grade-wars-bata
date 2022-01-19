@@ -12,29 +12,27 @@
     
     return implode($semiFinalCode); // example: 8f8be9
   }
- 
-  function accountTypeEncrypt($type, $email) {
-    $pre = $type . "|" . $email;
-  
+
+  function accountType($typeString, $email='none') {
+    // consts
     $ciphering = "AES-128-CTR";
     $iv_length = openssl_cipher_iv_length($ciphering);
     $options = 0;
-    $encryption_iv = random_bytes($iv_length);
-    $encryption_key = openssl_digest('ThatWasAlotOfEffortToGetThis', 'SHA256', true);
-    $encryption = openssl_encrypt($pre, $ciphering, $encryption_key, $options, $encryption_iv);
-  
-    return $encryption;
-  }
- 
-  function accountTypeDecrypt($type) {
-    $ciphering = "AES-128-CTR";
-    $iv_length = openssl_cipher_iv_length($ciphering);
-    $options = 0;
-    $decryption_iv = random_bytes($iv_length);
-    $decryption_key = openssl_digest('ThatWasAlotOfEffortToGetThis', 'SHA256', true);
-    $decryption = openssl_decrypt($type, $ciphering, $decryption_key, $options, $decryption_iv);
-  
-    return explode("|", $decryption);
+    $decryption_iv = "1850374592974628";
+    $key = openssl_digest('ThatWasAlotOfEffortToGetThis', 'SHA256', true);
+
+    if($email != 'none') {
+      // encript
+      $encriptionString = $email . "|" . $typeString
+      $encryption = openssl_encrypt($encriptionString, $ciphering, $encryption_key, $options, $encryption_iv);
+      return $encryption
+    } else {
+      // decript
+
+      $decryption = openssl_decrypt($type, $ciphering, $decryption_key, $options, $decryption_iv);
+      return explode("|", $decryption);
+    }
+
   }
  
   // if the form is submitted
@@ -57,8 +55,8 @@
       // make an dummy email
       $email = rand(1000000, 9999999) . "@sjasd.ca";
       $code = makeCode($email, $accountType); // make the join code
-      $accountType = accountTypeEncrypt($accountType, $email); // make the account type
-      $decriypedAccountType = accountTypeDecrypt($accountType); // decrypt the account type
+      $accountType = accountType($accountType, $email); // make the account type
+      $decriypedAccountType = accountType($accountType); // decrypt the account type
       $accountType = $decriypedAccountType[0]; // get the account type
  
       $sql = "INSERT INTO `pre_user` (`otp`, `email`, `type`) VALUES " . $code . "," . $email . "," . $accountType;
