@@ -1,4 +1,4 @@
-# Grade Wars (Bata Build)
+# Grade Wars (Beta Build)
 
 ## TODO
 - [x] set up incoding and decoding accout type
