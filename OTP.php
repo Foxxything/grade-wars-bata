@@ -18,18 +18,20 @@
     $ciphering = "AES-128-CTR";
     $iv_length = openssl_cipher_iv_length($ciphering);
     $options = 0;
-    $decryption_iv = "1850374592974628";
+    $iv = "1850374592974628";
     $key = openssl_digest('ThatWasAlotOfEffortToGetThis', 'SHA256', true);
 
     if($email != 'none') {
       // encript
-      $encriptionString = $email . "|" . $typeString
-      $encryption = openssl_encrypt($encriptionString, $ciphering, $encryption_key, $options, $encryption_iv);
-      return $encryption
+      $encriptionString = $email . "|" . $typeString;
+      $encryption = openssl_encrypt($encriptionString, $ciphering, $key, $options, $iv);
+      return $encryption;
     } else {
       // decript
 
-      $decryption = openssl_decrypt($type, $ciphering, $decryption_key, $options, $decryption_iv);
+      $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, $iv);
+      var_dump($decryption);
+      echo "\n";
       return explode("|", $decryption);
     }
 
@@ -56,11 +58,12 @@
       $email = rand(1000000, 9999999) . "@sjasd.ca";
       $code = makeCode($email, $accountType); // make the join code
       $accountType = accountType($accountType, $email); // make the account type
-      $decriypedAccountType = accountType($accountType); // decrypt the account type
-      $accountType = $decriypedAccountType[0]; // get the account type
+      $decriypedAccountType = accountType($accountType)[1]; // decrypt the account type
+      var_dump($decriypedAccountType);
+      echo "\n";
  
       $sql = "INSERT INTO `pre_user` (`otp`, `email`, `type`) VALUES " . $code . "," . $email . "," . $accountType;
-      echo $sql."\n";
+      // echo $sql."\n";
       
       $finalCode = array(
         "email" => $email,
