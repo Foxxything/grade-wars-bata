@@ -30,7 +30,6 @@
       // decript
 
       $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, $iv);
-      var_dump($decryption);
       echo "\n";
       return explode("|", $decryption);
     }
@@ -40,8 +39,8 @@
   // if the form is submitted
   if(true){
     // get the number of OTP
-    $otp = 3;
-    $accountType = 1;
+    $otp = 70;
+    $preAccountType = 1;
  
     $accountTypeKey = [
       "none" => 0,
@@ -57,13 +56,21 @@
       // make an dummy email
       $email = rand(1000000, 9999999) . "@sjasd.ca";
       $code = makeCode($email, $accountType); // make the join code
-      $accountType = accountType($accountType, $email); // make the account type
+      $accountType = accountType($preAccountType, $email); // make the account type
       $decriypedAccountType = accountType($accountType)[1]; // decrypt the account type
-      var_dump($decriypedAccountType);
-      echo "\n";
  
+      // echo "<br>";
+      // echo "+--------------------------------------+<br>";
+      // echo "| Email: " . $email . "<br>";
+      // echo "| Code: " . $code . "<br>";
+      // echo "| Accout type code: " . $preAccountType . "<br>";
+      // echo "| Account type: " . $accountType . "<br>";
+      // echo "| Decoded Account: " . $decriypedAccountType . "<br>";
+      // echo "+--------------------------------------+<br>";
+      // echo "<br>";
+
       $sql = "INSERT INTO `pre_user` (`otp`, `email`, `type`) VALUES " . $code . "," . $email . "," . $accountType;
-      // echo $sql."\n";
+      echo $sql."<br>";
       
       $finalCode = array(
         "email" => $email,
