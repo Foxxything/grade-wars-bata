@@ -36,7 +36,7 @@
     }
 
   }
- 
+
   // if the form is submitted
   if(true){
     // get the number of OTP
