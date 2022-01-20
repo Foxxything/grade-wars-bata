@@ -8,25 +8,38 @@
   <body>
     <div class='align-middle'>
       <center>
+        <div style="margin-top: 10px;"></div>
         <div class='card' style="width: max-content;" id='card'>
           <div class='card-header'>
             <h1>Sign Up</h1>
           </div>
           <div id='firstPage' class='card-body'>
             <div class='row'>
-              <!-- Join Code input -->
-              <div class="col-sm-5 col-12 d-flex align-items-center">
-                <label for="joinCode" class="m-0" style="font-size:20px;font-weight:500">Enter Join Code</label>
-              </div>
-              <div class="col-sm-9-5 col-12" style="top:2px;left:1px">
-                <input type="text" id="joinCode" placeholder="Code" class="form-control"/>
-                <div style="margin-top: 5px;"></div>
-              </div>
-              <!-- Continue button -->
-              <button id='continue' class='btn btn-primary' style="height:38px; position:relative; top:2px;left:4px;">Continue</button>
+              <form action='./endpoints/post.php' method='post'>
+                <!-- Join code input -->
+                <div class='col-sm-5 col-12 d-flex align-items-center'>
+                  <label for="joinCode" class="m-0" style="font-size:20px;font-weight:500">Enter Join Code</label>
+                </div>
+                <div class="col-sm-9-5 col-12" style="top:2px;left:1px">
+                  <input type="text" id="joinCode" placeholder="Code" class="form-control"/>
+                  <div style="margin-top: 5px;"></div>
+                </div>
+
+                <!-- Submit button -->
+                <input id='continue' type='submit' class='btn btn-primary' value='Continue' style="margin-top: 10px;margin-bottom: 10px;"/>
+              </form>
             </div>
           </div>
       </center>
     </div>
   </body>
 </html>
+
+<script>
+  // if continue button is clicked or if enter is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) {
+      document.getElementById('continue').click();
+    }
+  });
+</script>
