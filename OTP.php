@@ -135,6 +135,5 @@
       // push the code to the array
       // array_push($otp_array, $finalCode);
     }
-
   }
 ?>

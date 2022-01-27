@@ -3,9 +3,14 @@
   if (!$_SESSION['joinStage'] == 2) { // if user has not completed the join process
     header("Location: userJoin.php"); // redirect to join page
   } else {
+    require_once('../config.php'); // get the sql connection
+
     // get values from session variables
     $email = $_SESSION['email'];
     $joinCode = $_SESSION['joinCode'];
+
+    $sql = 'SELECT type FROM pre_user WHERE email = "' . $email . '" AND otp = "' . $joinCode . '"';
+    $accoutType = $conn->query($sql);
   }
 ?>
 
@@ -27,17 +32,17 @@
         <form action='userCreation.php' method='post'>
           <!-- First name -->
           <label for="firstName" class="m-0">First Name</label>
-          <input type="text" id="firstName" placeholder="Enter First Name" class="form-control"/>
+          <input type="text" id="firstName" name='firstName' placeholder="Enter First Name" class="form-control"/>
           <div style="margin-top: 10px;"></div>
 
           <!-- Last name -->
           <label for="lastName" class="m-0">Last Name</label>
-          <input type="text" id="lastName" placeholder="Enter Last Name" class="form-control"/>
+          <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" class="form-control"/>
           <div style="margin-top: 10px;"></div>
 
           <!-- title slecter -->
           <label for="title" class="m-0">Title</label>
-          <select id="title" class="form-control">
+          <select id="title" name='title' class="form-control">
             <option>Select Title</option>
             <option>Mr.</option>
             <option>Mrs.</option>
@@ -50,12 +55,12 @@
 
           <!-- password -->
           <label for="password" class="m-0">Password</label>
-          <input type="password" id="password" placeholder="Enter Password" class="form-control"/>
+          <input type="password" name="password" id="password" placeholder="Enter Password" class="form-control"/>
           <div style="margin-top: 10px;"></div>
 
           <!-- Confirm password -->
           <label for="confirmPassword" class="m-0">Confirm Password</label>
-          <input type="password" id="confirmPassword" placeholder="Confirm Password" class="form-control"/>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" class="form-control"/>
           <div style="margin-top: 10px;"></div>
 
           <!-- Submit button -->
@@ -75,16 +80,6 @@
     }
   });
 
-  // if alt+ctrl+shift is pressed
-  document.addEventListener('keydown', function(e) {
-    if (e.altKey && e.ctrlKey && e.shiftKey) {
-      <?php
-        // distroy session variables
-        session_destroy();
-      ?>
-    }
-  });
-
 </script>
 
 <?php
@@ -94,35 +89,6 @@
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "<script>console.log('Form Submitted');</script>";
 
-    require_once('../config.php'); // get the sql connection
-
-    class debuging {
-      public function __construct($firstName, $lastName, $title, $password, $confirmPassword) {
-        echo "<script>console.log('Debug Objects Created');</script>";
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->title = $title;
-        $this->password = $password;
-        $this->confirmPassword = $confirmPassword;
-      }
-  
-      public function getDebugArray() {
-        $debugArray = array(
-          'firstName' => $this->firstName,
-          'lastName' => $this->lastName,
-          'title' => $this->title,
-          'password' => $this->password,
-          'confirmPassword' => $this->confirmPassword
-        );
-        return $debugArray;
-      }
-
-      public function __destruct()
-      {
-        echo "<script>console.log('Debug Objects Destroyed');</script>";
-      }
-    }
-
     // fetch the values from the form
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
@@ -130,10 +96,40 @@
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    $debug = new debuging($firstName, $lastName, $title, $password, $confirmPassword); // create a new debug object
-    $debugJson = json_encode($debug->getDebugArray()); // convert the debug object to json
-    $debug = null; // destroy the debug object
+    // check if the passwords match
+    if ($password != $confirmPassword) {
+      echo "<script>alert('Passwords do not match');</script>";
+      echo "<script>window.location.href = 'userCreation.php';</script>";
+    } else {
+      // hash the password
+      $password = password_hash($password, PASSWORD_DEFAULT);
 
-    echo "<script>console.log('Debug Objects Created: $debugJson');</script>";
-    echo "<pre> $debugJson </pre>";
+      // create the query
+      $query = "INSERT INTO users SET `email` = $email, `fristName` = $firstName, `lastName` = $lastName, `title` = $title, `password` = $password, `type` = $accoutType";
+
+      // run the query
+      $result = mysqli_query($conn, $query);
+
+      // check if the query was successful
+      if ($result) {
+        // remove crap from pre_user 
+        $sql = 'DELETE FROM pre_user WHERE email = "' . $email . '" AND otp = "' . $joinCode . '"';
+        $conn->query($sql);
+
+        echo "<script>alert('User Created');</script>";
+        // echo "<script>window.location.href = '../index.php';</script>";
+      } else {
+        echo "<script>alert('Error creating user');</script>";
+        echo "<script>window.location.href = 'userCreation.php';</script>";
+      }
+    }
+
+
+    // $debug = array(); // array to store debug messages
+    // // push all values to the debug array
+    // array_push($debug, $firstName, $lastName, $title, $password, $confirmPassword);
+
+    // $debug = json_encode($debug); // encode the debug array to json
+
+    // echo "<script>console.log('Debug: " . $debug . "');</script>";
   }

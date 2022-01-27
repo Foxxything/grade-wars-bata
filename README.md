@@ -5,8 +5,10 @@
 - [x] add database instagration for OTP.php testing script
 - [ ] add user to access only gradewars db
 - [x] finish OTP.php
-- [ ] work on first page of joining
+- [x] work on first page of joining
 - [ ] make second page of joining
+- [ ] fix second page of joining (line 91)
+
 
 ## note to self
 - [ ] **REMOVE OTP.php**
