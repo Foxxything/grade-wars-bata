@@ -7,13 +7,19 @@
     // if the user has already entered the join code, then redirect to the next page
     header("Location: userCreation.php");
   }
+
+  $width = "60%";
+
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
     <title id='title'>Enter Join Code</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
@@ -21,20 +27,20 @@
     <div class='align-middle'>
       <center>
         <div style="margin-top: 10px;"></div>
-        <div class='card' style="width: 75%;" id='card'>
+        <div class='card' style="width: <?php echo $width ?>;" id='card'>
           <div class='card-header'>
             <h1>Sign Up</h1>
           </div>
           <div id='firstPage' class='card-body'>
             <div class='row'>
-              <form action='/' method='post' style="width: max-content;">
+              <form action='userJoin.php' method='post' style="width: <?php echo $width ?>;">
 
                 <!-- Join code input -->
                 <div class='d-flex align-items-center' style="width: fit-content;">
                   <label for="joinCode" style="font-size:20px;font-weight:500" class="m-0" >Enter Join Code</label>
                 </div>
                 <div class="col-sm-9-5 col-12">
-                  <input type="text" id="joinCode" placeholder="Code" class="form-control"/>
+                  <input type="text" id="joinCode" name='joinCode' placeholder="Code" class="form-control"/>
                   <div style="margin-top: 5px;"></div>
                 </div>
                 <br>
@@ -43,27 +49,13 @@
                   <label for="email" class="m-0" style="font-size:20px;font-weight:500">Email</label>
                 </div>
                 <div class="col-sm-9-5 col-12">
-                  <input type="email" id="email" placeholder="Email" class="form-control"/>
+                  <input type="email" id="email" name='email' placeholder="Email" class="form-control"/>
                   <div style="margin-top: 5px;"></div>
                 </div>
 
                 <!-- Submit button -->
                 <input id='continue' type='submit' class='btn btn-primary' value='Continue' style="margin-top: 10px;margin-bottom: 10px;"/>
               </form>
-
-              <!--  hidden error page -->
-              <div id='errorPage' class='card-body' style="display: none;">
-                <div class='row'>
-                  <div class='col-sm-9-5 col-12'>
-                    <div class='alert alert-danger' role='alert'>
-                      <h4 class='alert-heading'>Error</h4>
-                      <p>
-                        <span id='errorMessage'></span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
       </center>
@@ -83,26 +75,25 @@
 <?php
   // Path: userJoin.php
 
-  if (isset($_POST)) {
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require_once('../config.php'); // get the sql connection
-    $action = $_POST['action'];  // get value of 'action' from post request
 
     // get values from post request
     $joinCode = $_POST['joinCode'];
     $email = $_POST['email'];
 
+
+
     if (!isset($joinCode) || !isset($email)) { // if join code or email is not set
-      echo "<script>document.getElementById('errorMessage').innerHTML = 'Please enter a join code and email.';</script>";
-      echo "<script>document.getElementById('errorPage').style.display = 'block';</script>";
+      echo "<script>alert('Please enter a join code and email.');</script>";
       exit();
     }
 
     // check if join code is valid for given email
-    $sql = "SELECT * FROM users WHERE email = '$email' AND joinCode = '$joinCode'";
+    $sql = "SELECT * FROM pre_user WHERE email = '$email' AND otp = '$joinCode'";
     $result = $conn->query($sql);
     if ($result->num_rows == 0) { // if join code is not valid
-      echo "<script>document.getElementById('errorMessage').innerHTML = 'Invalid join code.';</script>";
-      echo "<script>document.getElementById('errorPage').style.display = 'block';</script>";
+      echo "<script>alert('Invalid join code.');</script>";
       exit();
     } else { // if join code is valid
       // set session variables

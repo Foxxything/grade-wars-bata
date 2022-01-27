@@ -13,7 +13,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
     <title id='title'>Create User</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
@@ -24,7 +24,7 @@
         <h1>Create User</h1>
       </div>
       <div class="card-body">
-        <form action='/' method='post'>
+        <form action='userCreation.php' method='post'>
           <!-- First name -->
           <label for="firstName" class="m-0">First Name</label>
           <input type="text" id="firstName" placeholder="Enter First Name" class="form-control"/>
@@ -58,17 +58,70 @@
           <input type="password" id="confirmPassword" placeholder="Confirm Password" class="form-control"/>
           <div style="margin-top: 10px;"></div>
 
-          <input type='button' id='submit' class='btn btn-primary' value='Submit'/>
+          <!-- Submit button -->
+          <input id='submit' type='submit' class='btn btn-primary' value='Submit' style="margin-top: 10px;margin-bottom: 10px;"/>
         </form>
       </div>
     </div>
   </body>
 </html>
 
+<script>
+
+  // if continue button is clicked or if enter is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) {
+      document.getElementById('submit').click();
+    }
+  });
+
+  // if alt+ctrl+shift is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.altKey && e.ctrlKey && e.shiftKey) {
+      <?php
+        // distroy session variables
+        session_destroy();
+      ?>
+    }
+  });
+
+</script>
+
 <?php
   // if the user has submitted the form
-  if (isset($_POST)) {
+
+
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    echo "<script>console.log('Form Submitted');</script>";
+
     require_once('../config.php'); // get the sql connection
+
+    class debuging {
+      public function __construct($firstName, $lastName, $title, $password, $confirmPassword) {
+        echo "<script>console.log('Debug Objects Created');</script>";
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->title = $title;
+        $this->password = $password;
+        $this->confirmPassword = $confirmPassword;
+      }
+  
+      public function getDebugArray() {
+        $debugArray = array(
+          'firstName' => $this->firstName,
+          'lastName' => $this->lastName,
+          'title' => $this->title,
+          'password' => $this->password,
+          'confirmPassword' => $this->confirmPassword
+        );
+        return $debugArray;
+      }
+
+      public function __destruct()
+      {
+        echo "<script>console.log('Debug Objects Destroyed');</script>";
+      }
+    }
 
     // fetch the values from the form
     $firstName = $_POST['firstName'];
@@ -77,5 +130,10 @@
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    
+    $debug = new debuging($firstName, $lastName, $title, $password, $confirmPassword); // create a new debug object
+    $debugJson = json_encode($debug->getDebugArray()); // convert the debug object to json
+    $debug = null; // destroy the debug object
+
+    echo "<script>console.log('Debug Objects Created: $debugJson');</script>";
+    echo "<pre> $debugJson </pre>";
   }
