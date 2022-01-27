@@ -23,51 +23,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <div style="margin-top: 10 px;"></div>
-    <div class="card">
-      <div class="card-header">
-        <h1>Create User</h1>
+  <div style="margin-top: 10px;"></div>
+    <center>
+      <div class="card">
+        <div class="card-header">
+          <h1>Create User</h1>
+        </div>
+        <div class="card-body">
+          <form action='userCreation.php' method='post'>
+            <!-- First name -->
+            <label for="firstName" class="m-0">First Name</label>
+            <input type="text" id="firstName" name='firstName' placeholder="Enter First Name" class="form-control"/>
+            <div style="margin-top: 10px;"></div>
+
+            <!-- Last name -->
+            <label for="lastName" class="m-0">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" class="form-control"/>
+            <div style="margin-top: 10px;"></div>
+
+            <!-- title slecter -->
+            <label for="title" class="m-0">Title</label>
+            <select id="title" name='title' class="form-control">
+              <option>Select Title</option>
+              <option>Mr.</option>
+              <option>Mrs.</option>
+              <option>Miss.</option>
+              <option>Ms.</option>
+              <option>Mx.</option>
+              <option>First Name</option>
+            </select>
+            
+
+            <!-- password -->
+            <label for="password" class="m-0">Password</label>
+            <input type="password" name="password" id="password" placeholder="Enter Password" class="form-control"/>
+            <div style="margin-top: 10px;"></div>
+
+            <!-- Confirm password -->
+            <label for="confirmPassword" class="m-0">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" class="form-control"/>
+            <div style="margin-top: 10px;"></div>
+
+            <!-- Submit button -->
+            <input id='submit' type='submit' class='btn btn-primary' value='Submit' style="margin-top: 10px;margin-bottom: 10px;"/>
+          </form>
+        </div>
       </div>
-      <div class="card-body">
-        <form action='userCreation.php' method='post'>
-          <!-- First name -->
-          <label for="firstName" class="m-0">First Name</label>
-          <input type="text" id="firstName" name='firstName' placeholder="Enter First Name" class="form-control"/>
-          <div style="margin-top: 10px;"></div>
-
-          <!-- Last name -->
-          <label for="lastName" class="m-0">Last Name</label>
-          <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" class="form-control"/>
-          <div style="margin-top: 10px;"></div>
-
-          <!-- title slecter -->
-          <label for="title" class="m-0">Title</label>
-          <select id="title" name='title' class="form-control">
-            <option>Select Title</option>
-            <option>Mr.</option>
-            <option>Mrs.</option>
-            <option>Miss.</option>
-            <option>Ms.</option>
-            <option>Mx.</option>
-            <option>First Name</option>
-          </select>
-          
-
-          <!-- password -->
-          <label for="password" class="m-0">Password</label>
-          <input type="password" name="password" id="password" placeholder="Enter Password" class="form-control"/>
-          <div style="margin-top: 10px;"></div>
-
-          <!-- Confirm password -->
-          <label for="confirmPassword" class="m-0">Confirm Password</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" class="form-control"/>
-          <div style="margin-top: 10px;"></div>
-
-          <!-- Submit button -->
-          <input id='submit' type='submit' class='btn btn-primary' value='Submit' style="margin-top: 10px;margin-bottom: 10px;"/>
-        </form>
-      </div>
-    </div>
+    </center>
   </body>
 </html>
 
