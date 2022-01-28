@@ -89,10 +89,13 @@
       exit();
     }
 
-    // check if join code is valid for given email
-    $sql = "SELECT * FROM pre_user WHERE email = '$email' AND otp = '$joinCode'";
-    $result = $conn->query($sql);
-    if ($result->num_rows == 0) { // if join code is not valid
+
+    $stmt = $mysqli->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?");
+    $stmt->bind_param("ss", $email, $joinCode);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 0) { // if the join code is not valid
       echo "<script>alert('Invalid join code.');</script>";
       exit();
     } else { // if join code is valid
@@ -105,4 +108,19 @@
       header("Location: userCreation.php");
     }
 
+    // // check if join code is valid for given email
+    // $sql = "SELECT * FROM pre_user WHERE email = '$email' AND otp = '$joinCode'";
+    // $result = $conn->query($sql);
+    // if ($result->num_rows == 0) { // if join code is not valid
+    //   echo "<script>alert('Invalid join code.');</script>";
+    //   exit();
+    // } else { // if join code is valid
+    //   // set session variables
+    //   $_SESSION['joinStage'] = 2;
+    //   $_SESSION['email'] = $email;
+    //   $_SESSION['joinCode'] = $joinCode;
+
+    //   // redirect to next page
+    //   header("Location: userCreation.php");
+    // }
   }
