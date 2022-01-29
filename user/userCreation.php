@@ -120,7 +120,7 @@
 
       echo "<script>console.log('Password hashed');</script>";
 
-      $stmt = $conn->prepare("INSERT INTO users SET `email` = ?, `firstName` = ?, `lastName` = ?, `title` = ?, `password` = ?, `type` = ?"); // prepare the sql statement
+      $stmt = $conn->prepare("INSERT INTO users SET `email` = ?, `first_name` = ?, `last_name` = ?, `title` = ?, `password` = ?, `type` = ?"); // prepare the sql statement
       $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accoutType); // bind the parameters
       $stmt->execute(); // execute the sql statement
 
