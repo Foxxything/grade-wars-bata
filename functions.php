@@ -38,18 +38,17 @@ function accountType($typeString, $email='none') {
   $ciphering = "AES-128-CTR";
   $iv_length = openssl_cipher_iv_length($ciphering);
   $options = 0;
-  $iv = "1850374592974628";
   $key = openssl_digest(KEY, 'SHA256', true);
 
   if($email != 'none') {
     // encript
     $encriptionString = $email . "|" . $typeString;
-    $encryption = openssl_encrypt($encriptionString, $ciphering, $key, $options, $iv);
+    $encryption = openssl_encrypt($encriptionString, $ciphering, $key, $options, IV);
     return $encryption;
   } else {
     // decript
 
-    $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, $iv);
+    $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, IV);
     echo "\n";
     return explode("|", $decryption);
   }
