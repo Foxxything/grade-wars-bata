@@ -4,6 +4,7 @@
   error_reporting(E_ALL);
 
   require('config.php');
+  require('functions.php');
 ?>
 <!DOCTYPE html>
 <html>
