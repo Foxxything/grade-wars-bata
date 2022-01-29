@@ -117,11 +117,10 @@
       // get the account type in plain text
       $accountTypeStr = array_search($preAccountType, $accountTypeKey);
 
-      // insert the values into the database
-      $sql = "INSERT INTO `pre_user` SET `email` = '$email', `otp` = '$code', `type` = '$accountType', `date` = NOW(), `type_plaintext` = '$accountTypeStr'";
-       
-      // run the query and check if it was successful
-      $conn -> query($sql);
+      $stmt = $conn->prepare("INSERT INTO pre_user (otp, email, type, type_plaintext, date) VALUES (?, ?, ?, ?, NOW())");
+      $stmt->bind_param("ssss", $email, $code, $accountType, $accountTypeStr);
+      $stmt->execute();
+
       if($conn -> error) {
         echo "Error: " . $conn -> error;
       }

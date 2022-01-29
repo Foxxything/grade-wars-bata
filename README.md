@@ -15,3 +15,4 @@
 - [ ] **REMOVE** any other testing scripts
 - [ ] **REMOVE** any mention of testing scripts
 - [ ] **REMOVE** any mention of `type_plaintext` of the table `pre_user`
+- [ ] **ADD** `// Path: config.php` into the `<?php` tag

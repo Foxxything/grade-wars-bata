@@ -11,6 +11,10 @@
 
     $sql = 'SELECT type FROM pre_user WHERE email = "' . $email . '" AND otp = "' . $joinCode . '"';
     $accoutType = $conn->query($sql);
+
+    $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?"); // prepare the sql statement
+    $stmt->bind_param("ss", $email, $joinCode); // bind the parameters
+    $stmt->execute(); // execute the sql statement
   }
 ?>
 
@@ -25,7 +29,7 @@
   <body>
   <div style="margin-top: 10px;"></div>
     <center>
-      <div class="card">
+      <div class="card" style="width: 40%;" >
         <div class="card-header">
           <h1>Create User</h1>
         </div>
@@ -111,6 +115,10 @@
 
       // run the query
       $result = mysqli_query($conn, $query);
+
+      $stmt = $conn->prepare("INSERT INTO users SET `email` = ?, `fristName` = ?, `lastName` = ?, `title` = ?, `password` = ?, `type` = ?"); // prepare the sql statement
+      $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accoutType); // bind the parameters
+      $stmt->execute(); // execute the sql statement
 
       // check if the query was successful
       if ($result) {

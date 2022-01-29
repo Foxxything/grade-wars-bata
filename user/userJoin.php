@@ -89,8 +89,7 @@
       exit();
     }
 
-
-    $stmt = $mysqli->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?");
+    $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?");
     $stmt->bind_param("ss", $email, $joinCode);
     $stmt->execute();
     $result = $stmt->get_result();
