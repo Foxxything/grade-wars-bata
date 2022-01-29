@@ -54,3 +54,17 @@ function accountType($typeString, $email='none') {
     return explode("|", $decryption);
   }
 }
+
+function makeCode(string $email, string $accountType) { // make the join code
+  $code = rand(100000, 999999); // example: 123456
+  //$hash = md5($email . $accountType . $code); // example: e10adc3949ba59abbe56e057f20f883e
+  $hash = hash('sha256', $email . $accountType . $code);
+  $semiFinalCode = array();
+
+  for ($i = 0; $i < 6; $i++) {
+    // randoom character from the hash
+    $semiFinalCode[$i] = $hash[rand(0, strlen($hash) - 1)];
+  }
+  
+  return implode($semiFinalCode); // example: 8f8be9
+}

@@ -55,41 +55,7 @@
     "both" => 3
   ];
 
-  // make the join code
-  function makeCode($email, $accountType) {
-    $code = rand(100000, 999999); // example: 123456
-    $hash = md5($email . $accountType . $code); // example: e10adc3949ba59abbe56e057f20f883e
-    $semiFinalCode = array();
 
-    for ($i = 0; $i < 6; $i++) {
-      // randoom character from the hash
-      $semiFinalCode[$i] = $hash[rand(0, strlen($hash) - 1)];
-    }
-    
-    return implode($semiFinalCode); // example: 8f8be9
-  }
-
-  function accountType($typeString, $email='none') {
-    // consts
-    $ciphering = "AES-128-CTR";
-    $iv_length = openssl_cipher_iv_length($ciphering);
-    $options = 0;
-    $iv = "1850374592974628";
-    $key = openssl_digest(KEY, 'SHA256', true);
-
-    if($email != 'none') {
-      // encript
-      $encriptionString = $email . "|" . $typeString;
-      $encryption = openssl_encrypt($encriptionString, $ciphering, $key, $options, $iv);
-      return $encryption;
-    } else {
-      // decript
-
-      $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, $iv);
-      echo "\n";
-      return explode("|", $decryption);
-    }
-  }
 
   // Check if the form was submitted and the values are not empty
   if(isset($_POST) && isset($_POST['amount']) && isset($_POST['type'])) {
