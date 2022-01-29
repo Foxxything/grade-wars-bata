@@ -13,10 +13,7 @@
     // get values from session variables
     $email = $_SESSION['email'];
     $joinCode = $_SESSION['joinCode'];
-
-    $sql = 'SELECT type FROM pre_user WHERE email = "' . $email . '" AND otp = "' . $joinCode . '"';
-    $accoutType = $conn->query($sql);
-
+    
     $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?"); // prepare the sql statement
     $stmt->bind_param("ss", $email, $joinCode); // bind the parameters
     $stmt->execute(); // execute the sql statement
