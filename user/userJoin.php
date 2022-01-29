@@ -8,11 +8,6 @@
     header("Location: userCreation.php");
   }
 
-  $width = "60%";
-
-  ini_set('display_errors', 1);
-  ini_set('display_startup_errors', 1);
-  error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
@@ -27,13 +22,13 @@
     <div class='align-middle'>
       <center>
         <div style="margin-top: 10px;"></div>
-        <div class='card' style="width: <?php echo $width ?>;" id='card'>
+        <div class='card' style="width: 60%;" id='card'>
           <div class='card-header'>
             <h1>Sign Up</h1>
           </div>
           <div id='firstPage' class='card-body'>
             <div class='row'>
-              <form action='userJoin.php' method='post' style="width: <?php echo $width ?>;">
+              <form action='userJoin.php' method='post' style="width: 60%;">
 
                 <!-- Join code input -->
                 <div class='d-flex align-items-center' style="width: fit-content;">
@@ -82,11 +77,8 @@
     $joinCode = $_POST['joinCode'];
     $email = $_POST['email'];
 
-
-
     if (!isset($joinCode) || !isset($email)) { // if join code or email is not set
       echo "<script>alert('Please enter a join code and email.');</script>";
-      exit();
     }
 
     $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?");
@@ -96,30 +88,12 @@
 
     if ($result->num_rows == 0) { // if the join code is not valid
       echo "<script>alert('Invalid join code.');</script>";
-      exit();
     } else { // if join code is valid
       // set session variables
       $_SESSION['joinStage'] = 2;
       $_SESSION['email'] = $email;
       $_SESSION['joinCode'] = $joinCode;
 
-      // redirect to next page
-      header("Location: userCreation.php");
+      header("Location: userCreation.php"); // redirect to next page
     }
-
-    // // check if join code is valid for given email
-    // $sql = "SELECT * FROM pre_user WHERE email = '$email' AND otp = '$joinCode'";
-    // $result = $conn->query($sql);
-    // if ($result->num_rows == 0) { // if join code is not valid
-    //   echo "<script>alert('Invalid join code.');</script>";
-    //   exit();
-    // } else { // if join code is valid
-    //   // set session variables
-    //   $_SESSION['joinStage'] = 2;
-    //   $_SESSION['email'] = $email;
-    //   $_SESSION['joinCode'] = $joinCode;
-
-    //   // redirect to next page
-    //   header("Location: userCreation.php");
-    // }
   }

@@ -1,9 +1,4 @@
 <?php
-
-  ini_set('display_errors', 1);
-  ini_set('display_startup_errors', 1);
-  error_reporting(E_ALL);
-
   session_start(); // start the session
   if (!$_SESSION['joinStage'] == 2) { // if user has not completed the join process
     header("Location: userJoin.php"); // redirect to join page
@@ -87,18 +82,16 @@
   // if continue button is clicked or if enter is pressed
   document.addEventListener('keydown', function(e) {
     if (e.keyCode == 13) {
-      document.getElementById('submit').click();
+      document.getElementById('submit').click(); // click the submit button
     }
   });
 
 </script>
 
 <?php
+
   // if the user has submitted the form
-
-
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    echo "<script>console.log('Form Submitted');</script>";
 
     // fetch the values from the form
     $firstName = $_POST['firstName'];
@@ -107,30 +100,24 @@
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    echo "<script>console.log('Got Post Vars');</script>";
-
-    // check if the passwords match
-    if ($password != $confirmPassword) {
+    if ($password != $confirmPassword) { // check if the passwords match
       echo "<script>alert('Passwords do not match');</script>";
     } else {
-      echo "<script>console.log('Passwords matched. in else block');</script>";
 
-      // hash the password
-      $password = password_hash($password, PASSWORD_DEFAULT);
+      $password = password_hash($password, PASSWORD_DEFAULT); // hash the password
 
-      echo "<script>console.log('Password hashed');</script>";
-
+      // insert the values into the user table
       $stmt = $conn->prepare("INSERT INTO users SET `email` = ?, `first_name` = ?, `last_name` = ?, `title` = ?, `password` = ?, `type` = ?"); // prepare the sql statement
       $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accoutType); // bind the parameters
       $stmt->execute(); // execute the sql statement
 
-      echo "<script>console.log('User created');</script>";
 
       // check if the query was successful
       if ($stmt->affected_rows == 1) {
-        // remove crap from pre_user 
-        $sql = 'DELETE FROM pre_user WHERE email = "' . $email . '" AND otp = "' . $joinCode . '"';
-        $conn->query($sql);
+        // delete from pre_user table
+        $stmt = $conn->prepare("DELETE FROM pre_user WHERE email = ? and otp = ?"); // prepare the sql statement
+        $stmt->bind_param("ss", $email, $joinCode); // bind the parameters
+        $stmt->execute(); // execute the sql statement
 
         echo "<script>alert('User Created');</script>";
         // echo "<script>window.location.href = '../index.php';</script>";
@@ -138,13 +125,4 @@
         echo "<script>alert('Error creating user');</script>";
       }
     }
-
-
-    // $debug = array(); // array to store debug messages
-    // // push all values to the debug array
-    // array_push($debug, $firstName, $lastName, $title, $password, $confirmPassword);
-
-    // $debug = json_encode($debug); // encode the debug array to json
-
-    // echo "<script>console.log('Debug: " . $debug . "');</script>";
   }
