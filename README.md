@@ -7,7 +7,7 @@
 - [x] finish OTP.php
 - [x] work on first page of joining
 - [ ] make second page of joining
-- [ ] fix second page of joining (line 91)
+- [x] fix second page of joining (line 91)
 
 
 ## note to self

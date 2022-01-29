@@ -1,4 +1,9 @@
 <?php
+
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+
   session_start(); // start the session
   if (!$_SESSION['joinStage'] == 2) { // if user has not completed the join process
     header("Location: userJoin.php"); // redirect to join page
@@ -102,26 +107,27 @@
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
+    echo "<script>console.log('Got Post Vars');</script>";
+
     // check if the passwords match
     if ($password != $confirmPassword) {
       echo "<script>alert('Passwords do not match');</script>";
-      echo "<script>window.location.href = 'userCreation.php';</script>";
     } else {
+      echo "<script>console.log('Passwords matched. in else block');</script>";
+
       // hash the password
       $password = password_hash($password, PASSWORD_DEFAULT);
 
-      // create the query
-      $query = "INSERT INTO users SET `email` = $email, `fristName` = $firstName, `lastName` = $lastName, `title` = $title, `password` = $password, `type` = $accoutType";
-
-      // run the query
-      $result = mysqli_query($conn, $query);
+      echo "<script>console.log('Password hashed');</script>";
 
       $stmt = $conn->prepare("INSERT INTO users SET `email` = ?, `fristName` = ?, `lastName` = ?, `title` = ?, `password` = ?, `type` = ?"); // prepare the sql statement
       $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accoutType); // bind the parameters
       $stmt->execute(); // execute the sql statement
 
+      echo "<script>console.log('User created');</script>";
+
       // check if the query was successful
-      if ($result) {
+      if ($stmt->affected_rows == 1) {
         // remove crap from pre_user 
         $sql = 'DELETE FROM pre_user WHERE email = "' . $email . '" AND otp = "' . $joinCode . '"';
         $conn->query($sql);
@@ -130,7 +136,6 @@
         // echo "<script>window.location.href = '../index.php';</script>";
       } else {
         echo "<script>alert('Error creating user');</script>";
-        echo "<script>window.location.href = 'userCreation.php';</script>";
       }
     }
 
