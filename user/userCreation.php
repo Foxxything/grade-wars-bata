@@ -8,13 +8,7 @@
     // get values from session variables
     $email = $_SESSION['email'];
     $joinCode = $_SESSION['joinCode'];
-
-    $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?"); // prepare the sql statement
-    $stmt->bind_param("ss", $email, $joinCode); // bind the parameters
-    $stmt->execute(); // execute the sql statement
-    $result = $stmt->get_result(); // get the result
-
-    $accoutType = $result->fetch_assoc()['type']; // get the type of user from the result
+    $accountType = $_SESSION['accountType'];
   }
 ?>
 

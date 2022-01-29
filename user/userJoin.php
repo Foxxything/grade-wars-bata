@@ -81,6 +81,7 @@
       echo "<script>alert('Please enter a join code and email.');</script>";
     }
 
+    // check if join code is valid by get type and storing
     $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?");
     $stmt->bind_param("ss", $email, $joinCode);
     $stmt->execute();
@@ -93,6 +94,7 @@
       $_SESSION['joinStage'] = 2;
       $_SESSION['email'] = $email;
       $_SESSION['joinCode'] = $joinCode;
+      $_SESSION['accountType'] = $result->fetch_assoc()['type'];
 
       header("Location: userCreation.php"); // redirect to next page
     }
