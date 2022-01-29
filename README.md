@@ -6,8 +6,9 @@
 - [ ] add user to access only gradewars db
 - [x] finish OTP.php
 - [x] work on first page of joining
-- [ ] make second page of joining
+- [x] make second page of joining
 - [x] fix second page of joining (line 91)
+- [ ] add login page 
 
 
 ## note to self
