@@ -56,7 +56,6 @@ function accountType($typeString, $email='none') {
 
 function makeCode(string $email, string $accountType) { // make the join code
   $code = rand(100000, 999999); // example: 123456
-  //$hash = md5($email . $accountType . $code); // example: e10adc3949ba59abbe56e057f20f883e
   $hash = hash('sha256', $email . $accountType . $code);
   $semiFinalCode = array();
 

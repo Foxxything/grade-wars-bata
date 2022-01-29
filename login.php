@@ -81,11 +81,12 @@
         // if emails arnt the same
         if ($email != $decriptedEmail) {
           echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! \nIn the meantime hang tight and an email will be sent when fixed!');</script>";
+          
           // send email to admin
-          $to = 'f.pinkerton@sjasd.ca';
-          $subject = 'Error in login.php';
-          $message = 'The email in the database is not the same as the email in the database. \nEmail in database: '.$decriptedEmail.' \nEmail in form: '.$email;
-          $headers = 'From: f.pinkerton@sjasd.ca';
+          $to = 'gradewars@gmail.com';
+          $subject = 'Email Mismatch from '.$email;
+          $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. \n\nThis is a system generated email. Please do not reply to this email.';
+          $headers = 'X-Priority: 1' . "\r\n";
           mail($to, $subject, $message, $headers);
         }
 
