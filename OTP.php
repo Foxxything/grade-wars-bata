@@ -2,6 +2,8 @@
   ini_set('display_errors', 1);
   ini_set('display_startup_errors', 1);
   error_reporting(E_ALL);
+
+  require('config.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,7 +75,7 @@
     $iv_length = openssl_cipher_iv_length($ciphering);
     $options = 0;
     $iv = "1850374592974628";
-    $key = openssl_digest('ThatWasAlotOfEffortToGetThis', 'SHA256', true);
+    $key = openssl_digest(KEY, 'SHA256', true);
 
     if($email != 'none') {
       // encript
@@ -94,9 +96,6 @@
     // Get the values from the form
     $amount = $_POST['amount'];
     $preAccountType = $_POST['type'];
-
-    // require the database link from config.php
-    require_once 'config.php';
 
     for($i=0; $i<$amount; $i++){
       $email = rand(1000000, 9999999) . "@sjasd.ca"; // make an dummy email (example: 123456@sjasd.ca)
