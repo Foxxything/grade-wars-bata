@@ -116,6 +116,7 @@
         $stmt->execute(); // execute the sql statement
 
         echo "<script>alert('User Created');</script>";
+        session_destroy(); // destroy the session
         // echo "<script>window.location.href = '../index.php';</script>";
       } else {
         echo "<script>alert('Error creating user');</script>";

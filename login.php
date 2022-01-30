@@ -77,9 +77,8 @@
         // split array into account type and decripted email
         $accountType = $pre[0];
         $decriptedEmail = $pre[1];
-
-        // if emails arnt the same
-        if ($email != $decriptedEmail) {
+        
+        if ($email != $decriptedEmail) { // if emails arnt the same
           echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! \nIn the meantime hang tight and an email will be sent when fixed!');</script>";
           
           // send email to admin
@@ -87,14 +86,19 @@
           $subject = 'Email Mismatch from '.$email;
           $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. \n\nThis is a system generated email. Please do not reply to this email.';
           $headers = 'X-Priority: 1' . "\r\n";
+          $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
+          $headers .= 'From: ' . FROM . "\r\n";
+
           mail($to, $subject, $message, $headers);
         }
+
+        
 
       } else { // if password is incorrect
         echo "<script>alert('Invalid password');</script>";
       }
     } else { // if user does not exist
-      echo "<script>alert(this spelled right? 'User can not be found. Please Try again. \nIf problems persist contact an administrator or \"f.pinkerton@sjasd.ca\"');</script>";
+      echo "<script>alert('User can not be found. Please Try again. \nIf problems persist contact an administrator or \"f.pinkerton@sjasd.ca\"');</script>";
       return;
     }
   }
