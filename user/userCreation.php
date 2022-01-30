@@ -98,26 +98,15 @@
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    echo "<script>console.log('$firstName');</script>";
-    echo "<script>console.log('$lastName');</script>";
-    echo "<script>console.log('$title');</script>";
-    echo "<script>console.log('$password');</script>";
-    echo "<script>console.log('$confirmPassword');</script>";
-    echo "<script>console.log('$email');</script>";
-    echo "<script>console.log('$joinCode');</script>";
-    echo "<script>console.log('$accountType');</script>";
-
     if ($password != $confirmPassword) { // check if the passwords match
       echo "<script>alert('Passwords do not match');</script>";
     } else {
-
       $password = password_hash($password, PASSWORD_DEFAULT); // hash the password
 
       // insert the values into the user table
-      $stmt = $conn->prepare("INSERT INTO users SET `email` = ?, `first_name` = ?, `last_name` = ?, `title` = ?, `password` = ?, `type` = ?"); // prepare the sql statement
-      $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accoutType); // bind the parameters
-      $stmt->execute(); // execute the sql statement
-
+      $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)");
+      $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accountType);
+      $stmt->execute();
 
       // check if the query was successful
       if ($stmt->affected_rows == 1) {
