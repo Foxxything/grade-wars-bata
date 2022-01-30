@@ -84,7 +84,7 @@
       $accountTypeStr = array_search($preAccountType, $accountTypeKey);
 
       $stmt = $conn->prepare("INSERT INTO pre_user (otp, email, type, type_plaintext, date) VALUES (?, ?, ?, ?, NOW())");
-      $stmt->bind_param("ssss", $email, $code, $accountType, $accountTypeStr);
+      $stmt->bind_param("ssss", $code, $email, $accountType, $accountTypeStr);
       $stmt->execute();
 
       if($conn -> error) {

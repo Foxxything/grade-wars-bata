@@ -15,7 +15,7 @@
         <h3>Login</h3>
       </div>
       <div class="card-body">
-        <form action="login.php">
+        <form action="login.php" method="POST">
           <!-- Email -->
           <label for="email" class="m-0">Email</label>
           <input type="text" id="email" name='email' placeholder="Enter Email" class="form-control"/>

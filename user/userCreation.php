@@ -1,4 +1,8 @@
 <?php
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+
   session_start(); // start the session
   if (!$_SESSION['joinStage'] == 2) { // if user has not completed the join process
     header("Location: userJoin.php"); // redirect to join page
@@ -93,6 +97,15 @@
     $title = $_POST['title'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
+
+    echo "<script>console.log('$firstName');</script>";
+    echo "<script>console.log('$lastName');</script>";
+    echo "<script>console.log('$title');</script>";
+    echo "<script>console.log('$password');</script>";
+    echo "<script>console.log('$confirmPassword');</script>";
+    echo "<script>console.log('$email');</script>";
+    echo "<script>console.log('$joinCode');</script>";
+    echo "<script>console.log('$accountType');</script>";
 
     if ($password != $confirmPassword) { // check if the passwords match
       echo "<script>alert('Passwords do not match');</script>";
