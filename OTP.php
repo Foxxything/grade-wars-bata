@@ -17,6 +17,7 @@
   <body>
     <div class='align-middle'>
       <center>
+        <div style="margin-top: 10px;"></div>
         <div class="card" style="width: max-content;">
           <div class="card-header">
             <h3>OTP Generator</h3>

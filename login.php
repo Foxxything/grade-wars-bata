@@ -1,3 +1,16 @@
+<?php
+  // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
+  if (isset($_SESSION['AccType'])) {
+    if ($_SESSION['AccType'] == 1) {
+      header('Location: ../accounts/teacher.php');
+    } else if ($_SESSION['AccType'] == 2) {
+      header('Location: ../accounts/admin.php');
+    } else if ($_SESSION['AccType'] == 3) {
+      header('Location: ../accounts/both.php');
+    }
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +18,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="../css/bootstrap.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
 </head>
 <body>
   <div style="margin-top: 10px;"></div>
@@ -47,6 +60,7 @@
 
 <?php
   // Path: login.php
+  session_start(); // start session
 
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // get email and password from form
@@ -69,8 +83,10 @@
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) { // if user exists
-      $accountType = $result->fetch_assoc()['type']; // get account type
-      $passwordHash = $result->fetch_assoc()['password']; // get password hash
+      $account = $result->fetch_assoc();
+      $accountType = $account['type'];
+      $passwordHash = $account['password'];
+      var_dump(htmlspecialchars($passwordHash));
 
       if (password_verify($password, $passwordHash)) { // if password is correct
         $pre = accountType($accountType); // get the account type and email array
@@ -82,18 +98,28 @@
           echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! \nIn the meantime hang tight and an email will be sent when fixed!');</script>";
           
           // send email to admin
-          $to = 'gradewars@gmail.com';
           $subject = 'Email Mismatch from '.$email;
           $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. \n\nThis is a system generated email. Please do not reply to this email.';
-          $headers = 'X-Priority: 1' . "\r\n";
-          $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
-          $headers .= 'From: ' . FROM . "\r\n";
-
-          mail($to, $subject, $message, $headers);
+          messageAdmin($subject, $message);
         }
 
-        
+        $_SESSION['accountType'] = $accountType; // set session account type
+        $_SESSION['email'] = $email; // set session email
+        $_SESSION['firstName'] = $result->fetch_assoc()['first_name']; // set session first name
+        $_SESSION['lastName'] = $result->fetch_assoc()['last_name']; // set session last name
+        $_SESSION['title'] = $result->fetch_assoc()['title']; // set session title
 
+        // redirect to account page
+        if ($accountType == 1) {
+          $_SESSION['AccType'] = 'teacher';
+          header('Location: ../accounts/teacher.html');
+        } else if ($accountType == 2) {
+          $_SESSION['AccType'] = 'admin';
+          header('Location: ../accounts/admin.html');
+        } else if ($accountType == 3) {
+          $_SESSION['AccType'] = 'both';
+          header('Location: ../accounts/both.php');
+        }
       } else { // if password is incorrect
         echo "<script>alert('Invalid password');</script>";
       }

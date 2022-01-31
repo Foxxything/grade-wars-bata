@@ -2,11 +2,6 @@
 
 
 if (! function_exists('str_ends_with')) {
-  /**
-   * @param string $haystack The string to search in.
-   * @param string $needle The string to search for.
-   * @return bool True if the $haystack ends with the $needle.
-   */
   function str_ends_with(string $haystack, string $needle): bool
   {
     $needle_len = strlen($needle);
@@ -54,6 +49,10 @@ function accountType($typeString, $email='none') {
   }
 }
 
+/**
+ * @param string $email of the user
+ * @param string $accountType of the user
+ */
 function makeCode(string $email, string $accountType) { // make the join code
   $code = rand(100000, 999999); // example: 123456
   $hash = hash('sha256', $email . $accountType . $code);
@@ -65,4 +64,21 @@ function makeCode(string $email, string $accountType) { // make the join code
   }
   
   return implode($semiFinalCode); // example: 8f8be9
+}
+
+/**
+ * @param string $message to send to the admin
+ * @param string $subject of the email
+ */
+function messageAdmin(string $message, string $subject) {
+  $to = EMAIL; // send message to admin email
+  $subject = $subject; // subject of the message
+  $message = $message; // message to send
+
+  // mail heqders
+  $headers = 'X-Priority: 1' . "\r\n";
+  $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
+  $headers .= 'From: ' . ADMIN_FROM . "\r\n";
+
+  mail($to, $subject, $message, $headers); // send the message
 }

@@ -101,7 +101,7 @@
     if ($password != $confirmPassword) { // check if the passwords match
       echo "<script>alert('Passwords do not match');</script>";
     } else {
-      $password = password_hash($password, PASSWORD_DEFAULT); // hash the password
+      $password = password_hash($password, PASSWORD_BCRYPT); // hash the password
 
       // insert the values into the user table
       $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)");
