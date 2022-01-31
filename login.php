@@ -36,7 +36,7 @@
           
           <!-- Password -->
           <label for="password" class="m-0">Password</label>
-          <input type="password" id="password" name='password' placeholder="Enter Password" class="form-control"/>
+          <input type="text" id="password" name='password' placeholder="Enter Password" class="form-control"/>
           <div style="margin-top: 10px;"></div>
 
           <!-- Submit -->
@@ -60,7 +60,6 @@
 
 <?php
   // Path: login.php
-  session_start(); // start session
 
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // get email and password from form
@@ -87,6 +86,7 @@
       $accountType = $account['type'];
       $passwordHash = $account['password'];
       var_dump(htmlspecialchars($passwordHash));
+      var_dump(htmlspecialchars($password));
 
       if (password_verify($password, $passwordHash)) { // if password is correct
         $pre = accountType($accountType); // get the account type and email array
