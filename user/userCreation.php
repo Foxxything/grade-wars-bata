@@ -75,17 +75,6 @@
   </body>
 </html>
 
-<script>
-
-  // if continue button is clicked or if enter is pressed
-  document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 13) {
-      document.getElementById('submit').click(); // click the submit button
-    }
-  });
-
-</script>
-
 <?php
 
   // if the user has submitted the form
@@ -112,10 +101,17 @@
         $emailEB = $row['email'];
         if ($email == $emailEB) { // if the email matches the join code
           // insert the user into the database
-          $stmt = $conn->prepare("INSERT INTO user (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accountType);
+          $stmt = $conn->prepare("INSERT INTO users WHERE email = ?, first_name = ?, last_name = ?, title = ?, password = ?, type = ?");
+          $stmt->bind_param("sssssi", $email, $firstName, $lastName, $title, $password, $accountType);
           $stmt->execute();
-          
+          // get rows affected
+          $rowsAffected = $stmt->affected_rows;
+          if ($rowsAffected > 0) { // if the user was inserted
+            echo "<script>alert('User created successfully');</script>";
+          } else { // if the user was not inserted
+            echo "<script>alert('User could not be created');</script>";
+          }
+
           // delete the pre_user entry
           $stmt = $conn->prepare("DELETE FROM pre_user WHERE otp = ?");
           $stmt->bind_param("s", $joinCode);
@@ -129,8 +125,8 @@
           session_destroy();
 
           // redirect to login page
-          echo "<script>alert('User created successfully');</script>";
-          echo "<script>window.location.href = '../login.php';</script>";
+          echo "<script>alert('old code deleted successfully');</script>";
+          echo "<script>window.location.href = 'userJoin.php';</script>";
         } else { // if the email does not match the join code
           echo "<script>alert('Email does not match the join code');</script>";
         }

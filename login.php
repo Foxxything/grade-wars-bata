@@ -132,15 +132,15 @@
 
         // redirect to account page
         if ($accountType == 1) {
-          $_SESSION['AccType'] = '1';
+          $_SESSION['AccType'] = 1;
           echo '<script>console.log("Redirecting to teacher page")</script>';
           header('Location: ./accounts/teacher.html');
         } else if ($accountType == 2) {
-          $_SESSION['AccType'] = '2';
+          $_SESSION['AccType'] = 2;
           echo '<script>console.log("Redirecting to admin page")</script>';
           header('Location: ./accounts/admin.html');
         } else if ($accountType == 3) {
-          $_SESSION['AccType'] = '3';
+          $_SESSION['AccType'] = 3;
           echo '<script>console.log("Redirecting to both page")</script>';
           header('Location: ./accounts/both.php');
         }
@@ -148,7 +148,7 @@
         echo "<script>alert('Invalid password');</script>";
       }
     } else { // if user does not exist
-      echo "<script>alert('User can not be found. Please Try again. \nIf problems persist contact an administrator or \"f.pinkerton@sjasd.ca\"');</script>";
+      echo "<script>alert('User can not be found. Please Try again. If problems persist contact an administrator or \"f.pinkerton@sjasd.ca\"');</script>";
       return;
     }
   }
