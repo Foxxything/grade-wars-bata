@@ -1,12 +1,20 @@
 <?php
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+
+  session_start();
   // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
   if (isset($_SESSION['AccType'])) {
     if ($_SESSION['AccType'] == 1) {
-      header('Location: ../accounts/teacher.php');
+      echo "<script>alert('login line 10')</script>";
+      header('Location: ./accounts/teacher.html');
     } else if ($_SESSION['AccType'] == 2) {
-      header('Location: ../accounts/admin.php');
+      echo "<script>alert('login line 13')</script>";
+      header('Location: ./accounts/admin.html');
     } else if ($_SESSION['AccType'] == 3) {
-      header('Location: ../accounts/both.php');
+      echo "<script>alert('login line 16')</script>";
+      header('Location: ./accounts/both.php');
     }
   }
 ?>
@@ -60,7 +68,6 @@
 
 <?php
   // Path: login.php
-  session_start(); // start session
 
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // get email and password from form
@@ -75,7 +82,7 @@
       echo "<script>alert('Invalid email');</script>";
       return;
     }
-
+    echo '<script>console.log("Valid email")</script>';
     // fetch user from database with email (password, type)
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
@@ -86,39 +93,56 @@
       $account = $result->fetch_assoc();
       $accountType = $account['type'];
       $passwordHash = $account['password'];
-      var_dump(htmlspecialchars($passwordHash));
+      $firstName = $account['first_name'];
+      $lastName = $account['last_name'];
+      $title = $account['title'];
 
       if (password_verify($password, $passwordHash)) { // if password is correct
+        echo '<script>console.log("Password correct")</script>';
         $pre = accountType($accountType); // get the account type and email array
         // split array into account type and decripted email
-        $accountType = $pre[0];
-        $decriptedEmail = $pre[1];
+        $accountType = $pre[1];
+        $decriptedEmail = $pre[0];
         
         if ($email != $decriptedEmail) { // if emails arnt the same
-          echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! \nIn the meantime hang tight and an email will be sent when fixed!');</script>";
+          echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! In the meantime hang tight and an email will be sent when fixed!');</script>";
           
           // send email to admin
           $subject = 'Email Mismatch from '.$email;
           $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. \n\nThis is a system generated email. Please do not reply to this email.';
           messageAdmin($subject, $message);
         }
+        echo '<script>console.log("Email correct")</script>';
 
+        $user = $result->fetch_assoc();
         $_SESSION['accountType'] = $accountType; // set session account type
         $_SESSION['email'] = $email; // set session email
-        $_SESSION['firstName'] = $result->fetch_assoc()['first_name']; // set session first name
-        $_SESSION['lastName'] = $result->fetch_assoc()['last_name']; // set session last name
-        $_SESSION['title'] = $result->fetch_assoc()['title']; // set session title
+        $_SESSION['firstName'] = $firstName; // set session first name
+        $_SESSION['lastName'] = $lastName; // set session last name
+        $_SESSION['title'] = $title; // set session title
+
+        $card = '<br>+------------------------+';
+        $card .= "<br>| Account Type: " . $accountType;
+        $card .= "<br>| Email: " . $email;
+        $card .= "<br>| First Name: " . $firstName;
+        $card .= "<br>| Last Name: " . $lastName;
+        $card .= "<br>| Title: " . $title;
+        $card .= "<br>+------------------------+";
+        echo $card;
 
         // redirect to account page
         if ($accountType == 1) {
-          $_SESSION['AccType'] = 'teacher';
-          header('Location: ../accounts/teacher.html');
+          $_SESSION['AccType'] = '1';
+          echo '<script>console.log("Redirecting to teacher page")</script>';
+          header('Location: ./accounts/teacher.html');
         } else if ($accountType == 2) {
-          $_SESSION['AccType'] = 'admin';
-          header('Location: ../accounts/admin.html');
+          $_SESSION['AccType'] = '2';
+          echo '<script>console.log("Redirecting to admin page")</script>';
+          header('Location: ./accounts/admin.html');
         } else if ($accountType == 3) {
-          $_SESSION['AccType'] = 'both';
-          header('Location: ../accounts/both.php');
+          $_SESSION['AccType'] = '3';
+          echo '<script>console.log("Redirecting to both page")</script>';
+          header('Location: ./accounts/both.php');
         }
       } else { // if password is incorrect
         echo "<script>alert('Invalid password');</script>";

@@ -1,21 +1,10 @@
 <?php
   session_start(); // start session
 
-  if (!$_SESSION['AccType'] == '3' ) { // if no email in session
+  if ($_SESSION['AccType'] != '3' ) { // if no email in session
     header('Location: ../login.php'); // redirect to index
   }
 
-  // function for teacher set up
-  function teacher() {
-    $_SESSION['AccType'] = '1';
-    header('Location: teacher.html');
-  }
-
-  // function for admin set up
-  function admin() {
-    $_SESSION['AccType'] = '3';
-    header('Location: admin.html');
-  }
 
 ?>
 
@@ -39,8 +28,8 @@
             </div>
             <div class="card-body">
               <ul class="list-group">
-                <li id='teacher' class="list-group-item" style="background-color: #165a72; cursor:pointer" onclick="<?php echo teacher() ?>"><a style="color: #fff;">Teacher</a> </li>
-                <li id='admin' class="list-group-item" style="background-color: #165a72; cursor:pointer" onclick="<?php echo admin() ?>"><a style="color: #fff;">Admin</a> </li>
+                <li id='teacher' class="list-group-item" style="background-color: #165a72; cursor:pointer;" onclick="byeBye('teacher.html')"><a style="color: #fff;">Teacher</a> </li>
+                <li id='admin' class="list-group-item" style="background-color: #165a72; cursor:pointer;" onclick="byeBye('admin.html')"><a style="color: #fff;">Admin</a> </li>
               </ul>
             </div>
           </div>
@@ -49,3 +38,15 @@
     </div>
   </body>
 </html>
+
+<script>
+  function byeBye(page) {
+    console.log('Redirecting to ' + page);
+    window.location.href = './' + page;
+    if (page == 'teacher.html') {
+      <?php $_SESSION['AccType'] = 1; ?>
+    } else if (page == 'admin.html') {
+      <?php $_SESSION['AccType'] = 2; ?>
+    }
+  }
+</script>

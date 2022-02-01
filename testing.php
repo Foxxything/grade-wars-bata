@@ -16,11 +16,13 @@ $type = accountType($type, $email);
 $stmt = $conn->prepare("INSERT INTO pre_user (otp, email, type) VALUES (?, ?, ?)");
 $stmt->bind_param("sss", $code, $email, $type);
 $stmt->execute();
+$decoded = accountType($type);
 
 $card = "+--------------------------------------+<br>";
 $card .= "| Email: " . $email . "<br>";
 $card .= "| Code: " . $code . "<br>";
 $card .= "| Accout type code: " . $type . "<br>";
+$card .= "| Account type: " . implode("|", $decoded) . "<br>";
 $card .= "+--------------------------------------+<br>";
 
 echo $card;

@@ -8,8 +8,9 @@
 - [x] work on first page of joining
 - [x] make second page of joining
 - [x] fix second page of joining (line 91)
-- [ ] add login page 
+- [x] add login page 
 - [x] make email working
+- [ ] fix `./user/userCration.php` (line 116) `Fatal error: Uncaught Error: Call to a member function bind_param() on bool in /var/www/html/beta/user/userCreation.php:116 Stack trace: #0 {main} thrown in /var/www/html/beta/user/userCreation.php on line 116`
 
 
 ## note to self

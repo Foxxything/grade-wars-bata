@@ -101,25 +101,42 @@
     if ($password != $confirmPassword) { // check if the passwords match
       echo "<script>alert('Passwords do not match');</script>";
     } else {
-      $password = password_hash($password, PASSWORD_BCRYPT); // hash the password
-
-      // insert the values into the user table
-      $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)");
-      $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accountType);
+      // check if email matchs the one in the db
+      $stmt = $conn->prepare("SELECT email FROM pre_user WHERE otp = ?");
+      $stmt->bind_param("s", $joinCode);
       $stmt->execute();
+      $result = $stmt->get_result();
 
-      // check if the query was successful
-      if ($stmt->affected_rows == 1) {
-        // delete from pre_user table
-        $stmt = $conn->prepare("DELETE FROM pre_user WHERE email = ? and otp = ?"); // prepare the sql statement
-        $stmt->bind_param("ss", $email, $joinCode); // bind the parameters
-        $stmt->execute(); // execute the sql statement
+      if ($result->num_rows > 0) { // if there is a match
+        $row = $result->fetch_assoc();
+        $emailEB = $row['email'];
+        if ($email == $emailEB) { // if the email matches the join code
+          // insert the user into the database
+          $stmt = $conn->prepare("INSERT INTO user (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)");
+          $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accountType);
+          $stmt->execute();
+          
+          // delete the pre_user entry
+          $stmt = $conn->prepare("DELETE FROM pre_user WHERE otp = ?");
+          $stmt->bind_param("s", $joinCode);
+          $stmt->execute();
 
-        echo "<script>alert('User Created');</script>";
-        session_destroy(); // destroy the session
-        // echo "<script>window.location.href = '../index.php';</script>";
-      } else {
-        echo "<script>alert('Error creating user');</script>";
+          // delete the session variables
+          unset($_SESSION['email']);
+          unset($_SESSION['joinCode']);
+          unset($_SESSION['accountType']);
+          unset($_SESSION['joinStage']);
+          session_destroy();
+
+          // redirect to login page
+          echo "<script>alert('User created successfully');</script>";
+          echo "<script>window.location.href = '../login.php';</script>";
+        } else { // if the email does not match the join code
+          echo "<script>alert('Email does not match the join code');</script>";
+        }
+        
+      } else { // if there is no match
+        echo "<script>alert('Invalid code');</script>";
       }
     }
   }
