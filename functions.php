@@ -68,7 +68,7 @@ function makeCode(string $email, string $accountType) { // make the join code
  * @param string $message to send to the admin
  * @param string $subject of the email
  */
-function messageAdmin(string $message, string $subject) {
+function messageAdmin(string $subject, string $message) {
   $to = EMAIL; // send message to admin email
   $subject = $subject; // subject of the message
   $message = $message; // message to send

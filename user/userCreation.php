@@ -112,18 +112,6 @@
           $emailEB = $row['email'];
           if ($email == $emailEB) { // if the email matches the join code
 
-            $card = "<br>+--------------------------------------+<br>";
-            $card .= "| Email: " . $email . "<br>";
-            $card .= "| First name: " . $firstName . "<br>";
-            $card .= "| Last name: " . $lastName . "<br>";
-            $card .= "| Title: " . $title . "<br>";
-            $card .= "| Password: " . $password . "<br>";
-            $card .= "| Account Type: " . $accountType . "<br>";
-            $card .= "+--------------------------------------+<br>";
-
-            // send the card to the user
-            echo $card;
-
             // insert the user into the database
             $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)"); // prepare the sql statement
               $stmt->bind_param("sssssi", $email, $firstName, $lastName, $title, $password, $accountType); // bind the parameters
