@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 require_once('config.php'); // get the sql connection
 require 'functions.php'; // get the functions
 
-$email = 'f.pinkerton@sjasd.ca';
+$email = 'sarah.james@sjad.ca';
 $type = 3;
 
 $code = makeCode($email, $type);
