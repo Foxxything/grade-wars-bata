@@ -102,7 +102,7 @@
         $emailEB = $row['email'];
         if ($email == $emailEB) { // if the email matches the join code
 
-          $card = "+--------------------------------------+<br>";
+          $card = "<br>+--------------------------------------+<br>";
           $card .= "| Email: " . $email . "<br>";
           $card .= "| First name: " . $firstName . "<br>";
           $card .= "| Last name: " . $lastName . "<br>";
@@ -112,7 +112,7 @@
           $card .= "+--------------------------------------+<br>";
 
           // send the card to the user
-          echo $
+          echo $card;
 
           // insert the user into the database
           $stmt = $conn->prepare("INSERT INTO users WHERE email = ?, first_name = ?, last_name = ?, title = ?, password = ?, type = ?");
