@@ -42,10 +42,8 @@ function accountType($typeString, $email='none') {
     return $encryption;
   } else {
     // decript
-
     $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, IV);
-    echo "\n";
-    return explode("|", $decryption);
+    return explode("|", $decryption); // return array of email and type
   }
 }
 

@@ -1,13 +1,14 @@
 <?php
   // open seesion amd create session variable
   session_start();
-  $_SESSION['joinStage'] = 1;
 
   if ($_SESSION['joinStage'] > 1) {
     // if the user has already entered the join code, then redirect to the next page
     header("Location: userCreation.php");
   }
+  $_SESSION['joinStage'] = 1;
 
+  require('../functions.php');
 ?>
 
 <!DOCTYPE html>
@@ -91,10 +92,11 @@
       echo "<script>alert('Invalid join code.');</script>";
     } else { // if join code is valid
       // set session variables
+      $rows = $result->fetch_assoc();
       $_SESSION['joinStage'] = 2;
       $_SESSION['email'] = $email;
       $_SESSION['joinCode'] = $joinCode;
-      $_SESSION['accountType'] = $result->fetch_assoc()['type'];
+      $_SESSION['accountType'] = intval(accountType($rows['type'])[1]);
 
       header("Location: userCreation.php"); // redirect to next page
     }

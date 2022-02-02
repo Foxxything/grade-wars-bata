@@ -13,6 +13,7 @@
     $email = $_SESSION['email'];
     $joinCode = $_SESSION['joinCode'];
     $accountType = $_SESSION['accountType'];
+    var_dump($accountType);
   }
 ?>
 
@@ -100,6 +101,19 @@
         $row = $result->fetch_assoc();
         $emailEB = $row['email'];
         if ($email == $emailEB) { // if the email matches the join code
+
+          $card = "+--------------------------------------+<br>";
+          $card .= "| Email: " . $email . "<br>";
+          $card .= "| First name: " . $firstName . "<br>";
+          $card .= "| Last name: " . $lastName . "<br>";
+          $card .= "| Title: " . $title . "<br>";
+          $card .= "| Password: " . $password . "<br>";
+          $card .= "| Account Type: " . $accountType . "<br>";
+          $card .= "+--------------------------------------+<br>";
+
+          // send the card to the user
+          echo $
+
           // insert the user into the database
           $stmt = $conn->prepare("INSERT INTO users WHERE email = ?, first_name = ?, last_name = ?, title = ?, password = ?, type = ?");
           $stmt->bind_param("sssssi", $email, $firstName, $lastName, $title, $password, $accountType);
