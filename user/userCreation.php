@@ -96,6 +96,7 @@
       $stmt->bind_param("s", $joinCode);
       $stmt->execute();
       $result = $stmt->get_result();
+      $stmt->reset();
 
       if ($result->num_rows > 0) { // if there is a match
         $row = $result->fetch_assoc();
