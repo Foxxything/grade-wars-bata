@@ -88,66 +88,81 @@
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    if ($password != $confirmPassword) { // check if the passwords match
-      echo "<script>alert('Passwords do not match');</script>";
-    } else {
-      // check if email matchs the one in the db
-      $stmt = $conn->prepare("SELECT email FROM pre_user WHERE otp = ?");
-      $stmt->bind_param("s", $joinCode);
-      $stmt->execute();
-      $result = $stmt->get_result();
-      $stmt->reset();
+    // if not all feilds are filled
+    if (empty($firstName) || empty($lastName) || empty($title) || empty($password) || empty($confirmPassword)) { // if not all feilds are filled
+      echo "<script>alert('Please fill in all feilds');</script>";
+    } else { // if all feilds are filled
+      if ($password != $confirmPassword) { // if the passwords do not match
+        echo "<script>alert('Passwords do not match');</script>";
+      } else { // if the passwords match
+        if ($password != $confirmPassword) { // check if the passwords match
+          echo "<script>alert('Passwords do not match');</script>";
+        } else {
+          // check if email matchs the one in the db
+          $stmt = $conn->prepare("SELECT email FROM pre_user WHERE otp = ?"); // prepare the sql statement
+            $stmt->bind_param("s", $joinCode); // bind the parameters 
+            $stmt->execute(); // execute the sql statement
+            $result = $stmt->get_result(); // get the result 
+            $stmt->reset(); // reset the statement 
+            $stmt->close(); // close the statement
 
-      if ($result->num_rows > 0) { // if there is a match
-        $row = $result->fetch_assoc();
-        $emailEB = $row['email'];
-        if ($email == $emailEB) { // if the email matches the join code
+          if ($result->num_rows > 0) { // if there is a match
+            $row = $result->fetch_assoc();
+            $emailEB = $row['email'];
+            if ($email == $emailEB) { // if the email matches the join code
 
-          $card = "<br>+--------------------------------------+<br>";
-          $card .= "| Email: " . $email . "<br>";
-          $card .= "| First name: " . $firstName . "<br>";
-          $card .= "| Last name: " . $lastName . "<br>";
-          $card .= "| Title: " . $title . "<br>";
-          $card .= "| Password: " . $password . "<br>";
-          $card .= "| Account Type: " . $accountType . "<br>";
-          $card .= "+--------------------------------------+<br>";
+              $card = "<br>+--------------------------------------+<br>";
+              $card .= "| Email: " . $email . "<br>";
+              $card .= "| First name: " . $firstName . "<br>";
+              $card .= "| Last name: " . $lastName . "<br>";
+              $card .= "| Title: " . $title . "<br>";
+              $card .= "| Password: " . $password . "<br>";
+              $card .= "| Account Type: " . $accountType . "<br>";
+              $card .= "+--------------------------------------+<br>";
 
-          // send the card to the user
-          echo $card;
+              // send the card to the user
+              echo $card;
 
-          // insert the user into the database
-          $stmt = $conn->prepare("INSERT INTO users WHERE email = ?, first_name = ?, last_name = ?, title = ?, password = ?, type = ?");
-          $stmt->bind_param("sssssi", $email, $firstName, $lastName, $title, $password, $accountType);
-          $stmt->execute();
-          // get rows affected
-          $rowsAffected = $stmt->affected_rows;
-          if ($rowsAffected > 0) { // if the user was inserted
-            echo "<script>alert('User created successfully');</script>";
-          } else { // if the user was not inserted
-            echo "<script>alert('User could not be created');</script>";
+              // insert the user into the database
+              $stmt = $conn->prepare("INSERT INTO users WHERE email = ?, first_name = ?, last_name = ?, title = ?, password = ?, type = ?"); // prepare the sql statement
+                $stmt->bind_param("sssssi", $email, $firstName, $lastName, $title, $password, $accountType); // bind the parameters
+                $stmt->execute(); // execute the sql statement
+                $rowsAffected = $stmt->affected_rows; // get the number of rows affected
+                $stmt->reset(); // reset the statement
+                $stmt->close(); // close the statement
+
+              if ($rowsAffected > 0) { // if the user was inserted
+                echo "<script>alert('User created successfully');</script>";
+              } else { // if the user was not inserted
+                echo "<script>alert('User could not be created');</script>";
+              }
+
+              // delete the pre_user entry
+              $stmt = $conn->prepare("DELETE FROM pre_user WHERE otp = ?");
+                $stmt->bind_param("s", $joinCode);
+                $stmt->execute();
+                $stmt->reset();
+                $stmt->close();
+
+              // delete the session variables
+              unset($_SESSION['email']);
+              unset($_SESSION['joinCode']);
+              unset($_SESSION['accountType']);
+              unset($_SESSION['joinStage']);
+              session_destroy();
+
+              // redirect to login page
+              echo "<script>alert('old code deleted successfully');</script>";
+              echo "<script>window.location.href = 'userJoin.php';</script>";
+            } else { // if the email does not match the join code
+              echo "<script>alert('Email does not match the join code');</script>";
+            }
+            
+          } else { // if there is no match
+            echo "<script>alert('Invalid code');</script>";
           }
-
-          // delete the pre_user entry
-          $stmt = $conn->prepare("DELETE FROM pre_user WHERE otp = ?");
-          $stmt->bind_param("s", $joinCode);
-          $stmt->execute();
-
-          // delete the session variables
-          unset($_SESSION['email']);
-          unset($_SESSION['joinCode']);
-          unset($_SESSION['accountType']);
-          unset($_SESSION['joinStage']);
-          session_destroy();
-
-          // redirect to login page
-          echo "<script>alert('old code deleted successfully');</script>";
-          echo "<script>window.location.href = 'userJoin.php';</script>";
-        } else { // if the email does not match the join code
-          echo "<script>alert('Email does not match the join code');</script>";
         }
-        
-      } else { // if there is no match
-        echo "<script>alert('Invalid code');</script>";
       }
     }
   }
+?>

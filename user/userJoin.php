@@ -83,10 +83,12 @@
     }
 
     // check if join code is valid by get type and storing
-    $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?");
-    $stmt->bind_param("ss", $email, $joinCode);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt = $conn->prepare("SELECT type FROM pre_user WHERE email = ? and otp = ?"); // get the type of the user
+      $stmt->bind_param("ss", $email, $joinCode); // bind the parameters
+      $stmt->execute(); // execute the query
+      $result = $stmt->get_result(); // get the result
+      $stmt->reset(); // reset the query 
+      $stmt->close(); // close the query
 
     if ($result->num_rows == 0) { // if the join code is not valid
       echo "<script>alert('Invalid join code.');</script>";
