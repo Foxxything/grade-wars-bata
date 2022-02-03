@@ -1,10 +1,9 @@
 <?php
   session_start(); // start session
 
-  if ($_SESSION['AccType'] != '3' ) { // if no email in session
-    header('Location: ../login.php'); // redirect to index
+  if ($_SESSION['AccType'] != 3 ) { // if not both account type
+    header('Location: ../login.php'); // redirect to login
   }
-
 
 ?>
 

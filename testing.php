@@ -6,8 +6,8 @@ error_reporting(E_ALL);
 require_once('config.php'); // get the sql connection
 require 'functions.php'; // get the functions
 
-$email = 'sarah.james@sjad.ca';
-$type = 3;
+$email = 'c.magel@sjasd.ca';
+$type = 1;
 
 $code = makeCode($email, $type);
 
@@ -26,3 +26,5 @@ $card .= "| Account type: " . implode("|", $decoded) . "<br>";
 $card .= "+--------------------------------------+<br>";
 
 echo $card;
+
+echo "<a href='./user/userJoin.php'>Join</a>";

@@ -6,15 +6,16 @@
   session_start();
   // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
   if (isset($_SESSION['AccType'])) {
+    echo "You are logged in as " . $_SESSION['AccType'];
     if ($_SESSION['AccType'] == 1) {
       echo "<script>alert('login line 10')</script>";
-      header('Location: ./accounts/teacher.html');
+      //header('Location: ./accounts/teacher.html');
     } else if ($_SESSION['AccType'] == 2) {
       echo "<script>alert('login line 13')</script>";
-      header('Location: ./accounts/admin.html');
+      //header('Location: ./accounts/admin.html');
     } else if ($_SESSION['AccType'] == 3) {
       echo "<script>alert('login line 16')</script>";
-      header('Location: ./accounts/both.php');
+      //header('Location: ./accounts/both.php');
     }
   }
 ?>
@@ -109,8 +110,9 @@
           
           // send email to admin
           $subject = 'Email Mismatch from '.$email;
-          $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. \n\nThis is a system generated email. Please do not reply to this email.';
+          $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. Reqested by '.$_SERVER['REMOTE_ADDR'] . ' on ' . date('Y-m-d H:i:s'). '. Please resolve this issue as soon as possible.';
           messageAdmin($subject, $message);
+          die();
         }
         echo '<script>console.log("Email correct")</script>';
 
@@ -124,11 +126,12 @@
         $card = '<br>+------------------------+';
         $card .= "<br>| Account Type: " . $accountType;
         $card .= "<br>| Email: " . $email;
+        $card .= "<br>| Decripted Email: " . $decriptedEmail;
         $card .= "<br>| First Name: " . $firstName;
         $card .= "<br>| Last Name: " . $lastName;
         $card .= "<br>| Title: " . $title;
         $card .= "<br>+------------------------+";
-        echo $card;
+        //echo $card;
 
         // redirect to account page
         if ($accountType == 1) {

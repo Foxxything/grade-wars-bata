@@ -1,5 +1,5 @@
 <?php
 session_start();
-unset($_SESSION['joinStage']);
+unset($_SESSION['AccType']);
 session_destroy();
-header('Location: ./user/userJoin.php');
+header('Location: ./login.php');

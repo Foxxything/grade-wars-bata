@@ -9,6 +9,7 @@
     header("Location: userJoin.php"); // redirect to join page
   } else {
     require_once('../config.php'); // get the sql connection
+    require '../functions.php'; // get the functions
 
     // get values from session variables
     $email = $_SESSION['email'];
@@ -111,10 +112,11 @@
           $row = $result->fetch_assoc();
           $emailEB = $row['email'];
           if ($email == $emailEB) { // if the email matches the join code
+            $accountType = accountType($accountType, $email); // get incripted account type
 
             // insert the user into the database
             $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, title, password, type) VALUES (?, ?, ?, ?, ?, ?)"); // prepare the sql statement
-              $stmt->bind_param("sssssi", $email, $firstName, $lastName, $title, $password, $accountType); // bind the parameters
+              $stmt->bind_param("ssssss", $email, $firstName, $lastName, $title, $password, $accountType); // bind the parameters
               $stmt->execute(); // execute the sql statement
               $rowsAffected = $stmt->affected_rows; // get the number of rows affected
               $stmt->reset(); // reset the statement
