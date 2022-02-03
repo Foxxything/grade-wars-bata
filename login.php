@@ -7,13 +7,13 @@
   // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
   if (isset($_SESSION['AccType'])) {
     echo "You are logged in as " . $_SESSION['AccType'];
-    if ($_SESSION['AccType'] == 1) {
+    if ($_SESSION['AccType'] === 1) {
       echo "<script>alert('login line 10')</script>";
       //header('Location: ./accounts/teacher.html');
-    } else if ($_SESSION['AccType'] == 2) {
+    } else if ($_SESSION['AccType'] === 2) {
       echo "<script>alert('login line 13')</script>";
       //header('Location: ./accounts/admin.html');
-    } else if ($_SESSION['AccType'] == 3) {
+    } else if ($_SESSION['AccType'] === 3) {
       echo "<script>alert('login line 16')</script>";
       //header('Location: ./accounts/both.php');
     }
