@@ -1,8 +1,9 @@
 <?php
   session_start(); // start session
 
-  if ($_SESSION['AccType'] != 3 ) { // if not both account type
-    header('Location: ../login.php'); // redirect to login
+  if ($_SESSION['AccType'] != 3 ) { // if no email in session
+    //echo "<script>alert('You are not premited to be here! you are a acc of " .$_SESSION['AccType']. "')</script>";
+    header('Location: ../login.php'); // redirect to index
   }
 
 ?>
