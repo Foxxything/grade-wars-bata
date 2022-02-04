@@ -66,8 +66,9 @@ function makeCode(string $email, string $accountType):string { // make the join 
 /**
  * @param string $message to send to the admin
  * @param string $subject of the email
+ * @return bool true if the email was sent and false if it was not
  */
-function messageAdmin(string $subject, string $message) {
+function messageAdmin(string $subject, string $message):bool {
   $to = EMAIL; // send message to admin email
 
   // mail headers
@@ -77,15 +78,16 @@ function messageAdmin(string $subject, string $message) {
   $headers .= "MIME-Version: 1.0\r\n";
   $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
-  mail($to, $subject, $message, $headers); // send the message
+  return mail($to, $subject, $message, $headers); // send the message
 }
 
 /**
  * @param string $email of the user
  * @param string $subject of the email
  * @param string $message to send to the user
+ * @return bool true if the email was sent and false if it was not
  */
-function sendEmail(string $email, string $subject, string $message) {
+function sendEmail(string $email, string $subject, string $message):bool {
   $to = $email; // send message to admin email
 
   // mail headers
@@ -95,15 +97,16 @@ function sendEmail(string $email, string $subject, string $message) {
   $headers .= "MIME-Version: 1.0\r\n";
   $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
-  mail($to, $subject, $message, $headers);
+  return mail($to, $subject, $message, $headers);
 }
 
 /**
  * @param string $email of the new user
  * @param int $type of the new user
  * @description create a new user and emails both admin and user
+ * @return bool true if the user was created and false if it was not
  */
-function newUser(string $email, int $type) { // create a new pre_user
+function newUser(string $email, int $type):bool { // create a new pre_user
 
   $code = makeCode($email, $type); // make the join code
   $accountType = accountType($type, $email); // make the account type
@@ -111,6 +114,7 @@ function newUser(string $email, int $type) { // create a new pre_user
   $stmt = $GLOBALS['conn']->prepare("INSERT INTO pre_user (otp, email, type) VALUES (?, ?, ?)");
   $stmt->bind_param("sss", $code, $email, $accountType);
   $stmt->execute();
+  $affected_rows = $stmt->affected_rows;
   $stmt->reset();
   $stmt->close();
 
@@ -137,6 +141,14 @@ function newUser(string $email, int $type) { // create a new pre_user
     </p>
   ";
 
-  messageAdmin("New User", $adminMessage);
-  sendEmail($email, "Welcome to GradeWars!", $message);
+  $admin = messageAdmin("New User", $adminMessage);
+  $user = sendEmail($email, "Welcome to GradeWars!", $message);
+  if ($affected_rows > 0 && $admin && $user) {
+    return true;
+  } else {
+    echo "<script>console.log(Admin: '$admin');</script>";
+    echo "<script>console.log(User: '$user');</script>";
+    echo "<script>console.log(Affected Rows: '$affected_rows');</script>";
+    return false;
+  }
 }
