@@ -11,6 +11,7 @@
 - [x] add login page 
 - [x] make email working
 - [x] fix `./user/userCration.php` (line 116) `Fatal error: Uncaught Error: Call to a member function bind_param() on bool in /var/www/html/beta/user/userCreation.php:116 Stack trace: #0 {main} thrown in /var/www/html/beta/user/userCreation.php on line 116`
+- [ ] Fix `AccType` session var changing. always at 2 when going to `login.php`
 
 
 ## note to self

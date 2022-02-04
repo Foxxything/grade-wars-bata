@@ -29,7 +29,7 @@
           </div>
           <div id='firstPage' class='card-body'>
             <div class='row'>
-              <form action='userJoin.php' method='post' style="width: 60%;">
+              <form action='userJoin.php' method='get' style="width: 60%;">
 
                 <!-- Join code input -->
                 <div class='d-flex align-items-center' style="width: fit-content;">
@@ -71,12 +71,12 @@
 <?php
   // Path: userJoin.php
 
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if (isset($_GET['joinCode'])) {
     require_once('../config.php'); // get the sql connection
 
-    // get values from post request
-    $joinCode = $_POST['joinCode'];
-    $email = $_POST['email'];
+    // get values from get request
+    $joinCode = $_GET['joinCode'];
+    $email = $_GET['email'];
 
     if (!isset($joinCode) || !isset($email)) { // if join code or email is not set
       echo "<script>alert('Please enter a join code and email.');</script>";

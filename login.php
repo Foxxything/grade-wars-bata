@@ -31,7 +31,7 @@
 </head>
 <body>
   <div style="margin-top: 10px;"></div>
-  <center>
+  <div style="text-align: center;">
     <div class="card" style="width: 40%;">
       <div class="card-header">
         <h3>Login</h3>
@@ -54,18 +54,9 @@
         </form>
       </div>
     </div>
-  </center>
+  </div>
 </body>
 </html>
-
-<script>
-  // if continue button is clicked or if enter is pressed
-  document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 13) {
-      document.getElementById('continue').click();
-    }
-  });
-</script>
 
 <?php
   // Path: login.php
@@ -101,16 +92,16 @@
       if (password_verify($password, $passwordHash)) { // if password is correct
         echo '<script>console.log("Password correct")</script>';
         $pre = accountType($accountType); // get the account type and email array
-        // split array into account type and decripted email
+        // split array into account type and decrypted email
         $accountType = $pre[1];
-        $decriptedEmail = $pre[0];
+        $decryptedEmail = $pre[0];
         
-        if ($email != $decriptedEmail) { // if emails arnt the same
-          echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! In the meantime hang tight and an email will be sent when fixed!');</script>";
+        if ($email != $decryptedEmail) { // if emails arnt the same
+          echo "<script>alert('Something funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! In the meantime hang tight and an email will be sent when fixed!');</script>";
           
           // send email to admin
           $subject = 'Email Mismatch from '.$email;
-          $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. Reqested by '.$_SERVER['REMOTE_ADDR'] . ' on ' . date('Y-m-d H:i:s'). '. Please resolve this issue as soon as possible.';
+          $message = 'The email address '.$email.' was used to login but the email address '.$decryptedEmail.' was stored in the database. Requested by '.$_SERVER['REMOTE_ADDR'] . ' on ' . date('Y-m-d H:i:s'). '. Please resolve this issue as soon as possible.';
           messageAdmin($subject, $message);
           die();
         }
@@ -126,7 +117,7 @@
         $card = '<br>+------------------------+';
         $card .= "<br>| Account Type: " . $accountType;
         $card .= "<br>| Email: " . $email;
-        $card .= "<br>| Decripted Email: " . $decriptedEmail;
+        $card .= "<br>| Decripted Email: " . $decryptedEmail;
         $card .= "<br>| First Name: " . $firstName;
         $card .= "<br>| Last Name: " . $lastName;
         $card .= "<br>| Title: " . $title;
@@ -151,7 +142,10 @@
         echo "<script>alert('Invalid password');</script>";
       }
     } else { // if user does not exist
-      echo "<script>alert('User can not be found. Please Try again. If problems persist contact an administrator or \"f.pinkerton@sjasd.ca\"');</script>";
-      return;
+      echo "<script>alert('User can not be found. Please Try again. If problems persist contact \"f.pinkerton@sjasd.ca\"');</script>";
+      die();
     }
   }
+
+
+

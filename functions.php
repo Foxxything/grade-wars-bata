@@ -1,5 +1,5 @@
 <?php
-
+require_once 'config.php'; // get the sql connection
 
 if (! function_exists('str_ends_with')) {
   function str_ends_with(string $haystack, string $needle): bool
@@ -29,19 +29,17 @@ function validEmail(string $email):bool {
 }
 
 function accountType($typeString, $email='none') {
-  // consts
+  // const's
   $ciphering = "AES-128-CTR";
-  $iv_length = openssl_cipher_iv_length($ciphering);
   $options = 0;
   $key = openssl_digest(KEY, 'SHA256', true);
 
   if($email != 'none') {
-    // encript
-    $encriptionString = $email . "|" . $typeString;
-    $encryption = openssl_encrypt($encriptionString, $ciphering, $key, $options, IV);
-    return $encryption;
+    // encrypt
+    $encryptionString = $email . "|" . $typeString;
+    return openssl_encrypt($encryptionString, $ciphering, $key, $options, IV);
   } else {
-    // decript
+    // decrypt
     $decryption = openssl_decrypt($typeString, $ciphering, $key, $options, IV);
     return explode("|", $decryption); // return array of email and type
   }
@@ -50,14 +48,15 @@ function accountType($typeString, $email='none') {
 /**
  * @param string $email of the user
  * @param string $accountType of the user
+ * @return string
  */
-function makeCode(string $email, string $accountType) { // make the join code
+function makeCode(string $email, string $accountType): string { // make the join code
   $code = rand(100000, 999999); // example: 123456
   $hash = hash('sha256', $email . $accountType . $code);
   $semiFinalCode = array();
 
   for ($i = 0; $i < 6; $i++) {
-    // randoom character from the hash
+    // random character from the hash
     $semiFinalCode[$i] = $hash[rand(0, strlen($hash) - 1)];
   }
   
@@ -70,13 +69,13 @@ function makeCode(string $email, string $accountType) { // make the join code
  */
 function messageAdmin(string $subject, string $message) {
   $to = EMAIL; // send message to admin email
-  $subject = $subject; // subject of the message
-  $message = $message; // message to send
 
-  // mail heqders
+  // mail headers
   $headers = 'X-Priority: 1' . "\r\n";
   $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
   $headers .= 'From: ' . ADMIN_FROM . "\r\n";
+  $headers .= "MIME-Version: 1.0\r\n";
+  $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
   mail($to, $subject, $message, $headers); // send the message
 }

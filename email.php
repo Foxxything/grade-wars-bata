@@ -1,5 +1,5 @@
 <?php
-  require_once('config.php'); // get the from from email
+  require_once('config.php'); // get "from" email
   require 'functions.php'; // get the functions
 
   //messageAdmin("test", "test");
@@ -20,4 +20,3 @@
   */
 
   mail($to, $subject, $message, $headers);
-?>
