@@ -7,7 +7,7 @@
   require('functions.php');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>OTP</title>
     <meta charset="utf-8">
@@ -16,7 +16,7 @@
   </head>
   <body>
     <div class='align-middle'>
-      <center>
+      <div style="text-align: center;">
         <div style="margin-top: 10px;"></div>
         <div class="card" style="width: max-content;">
           <div class="card-header">
@@ -40,7 +40,7 @@
             </form>
           </div>
         </div>
-      </center>
+      </div>
     </div>
   </body>
 </html>
@@ -66,20 +66,9 @@
     $preAccountType = $_POST['type'];
 
     for($i=0; $i<$amount; $i++){
-      $email = rand(1000000, 9999999) . "@sjasd.ca"; // make an dummy email (example: 123456@sjasd.ca)
+      $email = rand(1000000, 9999999) . "@sjasd.ca"; // make a dummy email (example: 123456@sjasd.ca)
       $code = makeCode($email, $preAccountType); // make the join code
       $accountType = accountType($preAccountType, $email); // make the account type
-      //$decriypedAccountType = accountType($accountType)[1]; // decrypt the account type
- 
-      // echo "<br>";
-      // echo "+--------------------------------------+<br>";
-      // echo "| Email: " . $email . "<br>";
-      // echo "| Code: " . $code . "<br>";
-      // echo "| Accout type code: " . $preAccountType . "<br>";
-      // echo "| Account type: " . $accountType . "<br>";
-      // echo "| Decoded Account: " . $decriypedAccountType . "<br>";
-      // echo "+--------------------------------------+<br>";
-      // echo "<br>";
 
       // get the account type in plain text
       $accountTypeStr = array_search($preAccountType, $accountTypeKey);
@@ -91,15 +80,6 @@
       if($conn -> error) {
         echo "Error: " . $conn -> error;
       }
-
-      // $finalCode = array(
-      //   "email" => $email,
-      //   "code" => $code,
-      //   "accountType" => array_search($decriypedAccountType, $accountTypeKey)
-      // );
- 
-      // push the code to the array
-      // array_push($otp_array, $finalCode);
     }
   }
 ?>

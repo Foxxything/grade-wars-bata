@@ -26,21 +26,18 @@ $rows = $result->num_rows;
 if ($rows < 1) {
   $stmt = $conn->prepare("INSERT INTO pre_user (otp, email, type) VALUES (?, ?, ?)");
   $stmt->bind_param("sss", $code, $email, $type);
-  $stmt->execute();
-  $stmt->reset();
-  $stmt->close();
 } else {
   $stmt = $conn->prepare("UPDATE pre_user SET otp = ?, type = ? WHERE email = ?");
   $stmt->bind_param("sss", $code, $type, $email);
-  $stmt->execute();
-  $stmt->reset();
-  $stmt->close();
 }
+$stmt->execute();
+$stmt->reset();
+$stmt->close();
 
 $card = "+-----------------------------------------------------------+<br>";
 $card .= "| Email: " . $email . "<br>";
 $card .= "| Code: " . $code . "<br>";
-$card .= "| Accout type code: " . $type . "<br>";
+$card .= "| Account type code: " . $type . "<br>";
 $card .= "| Account type: " . implode("|", $decoded) . "<br>";
 $card .= "+----------------------------------------------------------+<br>";
 

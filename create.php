@@ -1,10 +1,10 @@
 <?php
 if (!isset($_GET['email'])) {
-  echo "missing email prameter";
+  echo "missing email parameter";
   die();
 }
 if (!isset($_GET['type'])) {
-  echo "missing type prameter";
+  echo "missing type parameter";
   die();
 }
 
