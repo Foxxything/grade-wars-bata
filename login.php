@@ -7,13 +7,13 @@
   // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
   if (isset($_SESSION['AccType'])) {
     echo "You are logged in as " . $_SESSION['AccType'];
-    if ($_SESSION['AccType'] === 1) {
+    if ($_SESSION['AccType'] == 1) {
       echo "<script>alert('login line 10')</script>";
       //header('Location: ./accounts/teacher.html');
-    } else if ($_SESSION['AccType'] === 2) {
+    } else if ($_SESSION['AccType'] == 2) {
       echo "<script>alert('login line 13')</script>";
       //header('Location: ./accounts/admin.html');
-    } else if ($_SESSION['AccType'] === 3) {
+    } else if ($_SESSION['AccType'] == 3) {
       echo "<script>alert('login line 16')</script>";
       //header('Location: ./accounts/both.php');
     }
@@ -31,7 +31,7 @@
 </head>
 <body>
   <div style="margin-top: 10px;"></div>
-  <div style="text-align: center;">
+  <center>
     <div class="card" style="width: 40%;">
       <div class="card-header">
         <h3>Login</h3>
@@ -54,9 +54,18 @@
         </form>
       </div>
     </div>
-  </div>
+  </center>
 </body>
 </html>
+
+<script>
+  // if continue button is clicked or if enter is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) {
+      document.getElementById('continue').click();
+    }
+  });
+</script>
 
 <?php
   // Path: login.php
@@ -92,16 +101,16 @@
       if (password_verify($password, $passwordHash)) { // if password is correct
         echo '<script>console.log("Password correct")</script>';
         $pre = accountType($accountType); // get the account type and email array
-        // split array into account type and decrypted email
+        // split array into account type and decripted email
         $accountType = $pre[1];
-        $decryptedEmail = $pre[0];
+        $decriptedEmail = $pre[0];
         
-        if ($email != $decryptedEmail) { // if emails arnt the same
-          echo "<script>alert('Something funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! In the meantime hang tight and an email will be sent when fixed!');</script>";
+        if ($email != $decriptedEmail) { // if emails arnt the same
+          echo "<script>alert('Somthing funky happened inside the program. An alert had been sent to the system admin and will be resolved ASAP! In the meantime hang tight and an email will be sent when fixed!');</script>";
           
           // send email to admin
           $subject = 'Email Mismatch from '.$email;
-          $message = 'The email address '.$email.' was used to login but the email address '.$decryptedEmail.' was stored in the database. Requested by '.$_SERVER['REMOTE_ADDR'] . ' on ' . date('Y-m-d H:i:s'). '. Please resolve this issue as soon as possible.';
+          $message = 'The email address '.$email.' was used to login but the email address '.$decriptedEmail.' was stored in the database. Reqested by '.$_SERVER['REMOTE_ADDR'] . ' on ' . date('Y-m-d H:i:s'). '. Please resolve this issue as soon as possible.';
           messageAdmin($subject, $message);
           die();
         }
@@ -117,7 +126,7 @@
         $card = '<br>+------------------------+';
         $card .= "<br>| Account Type: " . $accountType;
         $card .= "<br>| Email: " . $email;
-        $card .= "<br>| Decripted Email: " . $decryptedEmail;
+        $card .= "<br>| Decripted Email: " . $decriptedEmail;
         $card .= "<br>| First Name: " . $firstName;
         $card .= "<br>| Last Name: " . $lastName;
         $card .= "<br>| Title: " . $title;
@@ -146,6 +155,3 @@
       die();
     }
   }
-
-
-
