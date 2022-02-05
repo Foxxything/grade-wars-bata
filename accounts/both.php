@@ -7,6 +7,18 @@
   }
   
   echo '<script>alert('."'".$_SESSION['AccType']."'".');</script>';
+
+  function admin() {
+    echo "<script>alert('admin');</script>";
+    $_SESSION['AccType'] = 2; // set session variable
+    header('Location: ../accounts/admin.php'); // redirect to admin
+  }
+
+  function teacher() {
+    echo "<script>alert('teacher');</script>";
+    $_SESSION['AccType'] = 1; // set session variable
+    header('Location: ../accounts/teacher.php'); // redirect to teacher
+  }
 ?>
 
 <!DOCTYPE html>
@@ -42,12 +54,12 @@
 
 <script>
   function byeBye(page) {
-    console.log('Redirecting to ' + page);
-    window.location.href = './' + page;
     if (page == 'teacher.html') {
       <?php $_SESSION['AccType'] = 1; ?>
     } else if (page == 'admin.html') {
       <?php $_SESSION['AccType'] = 2; ?>
     }
+    console.log('Redirecting to ' + page);
+    window.location.href = './' + page;
   }
 </script>
