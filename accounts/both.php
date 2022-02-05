@@ -2,9 +2,11 @@
   session_start(); // start session
 
   if ($_SESSION['AccType'] != 3 ) { // if not both account type
+    echo "<script>alert('You are already logged in! ".$_SESSION['AccType']."');</script>";
     header('Location: ../login.php'); // redirect to login
   }
-
+  
+  echo '<script>alert('."'".$_SESSION['AccType']."'".');</script>';
 ?>
 
 <!DOCTYPE html>

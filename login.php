@@ -6,7 +6,7 @@
   session_start();
   // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
   if (isset($_SESSION['AccType'])) {
-    echo "You are logged in as " . $_SESSION['AccType'];
+    echo "<script>alert('You are already logged in! ".$_SESSION['AccType']."');</script>";
     if ($_SESSION['AccType'] == 1) {
       echo "<script>alert('login line 10')</script>";
       //header('Location: ./accounts/teacher.html');
