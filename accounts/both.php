@@ -51,15 +51,3 @@
     </div>
   </body>
 </html>
-
-<script>
-  function byeBye(page) {
-    if (page == 'teacher.html') {
-      <?php $_SESSION['AccType'] = 1; ?>
-    } else if (page == 'admin.html') {
-      <?php $_SESSION['AccType'] = 2; ?>
-    }
-    console.log('Redirecting to ' + page);
-    window.location.href = './' + page;
-  }
-</script>
