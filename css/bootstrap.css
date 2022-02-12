@@ -50,7 +50,16 @@ body{
     color:#fff;
     text-align:left;
     background-color:#212529;
+    min-height: 100vh;
 }
+
+.fox_center{
+    height: 100%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
 [tabindex="-1"]:focus{
     outline:0!important
 }

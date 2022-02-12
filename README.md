@@ -16,10 +16,11 @@
 
 
 ## note to self
-- [ ] **REMOVE OTP.php**
+- [ ] **REMOVE** `OTP.php`
 - [ ] **REMOVE** any other testing scripts
 - [ ] **REMOVE** any mention of testing scripts
 - [ ] **REMOVE** any mention of `type_plaintext` of the table `pre_user`
 - [ ] **ADD** `// Path: config.php` into the `<?php` tag
 - [ ] **CHANGE** `KEY` and `IV` in `config.php` when finished
 - [ ] **CHANGE** my security... its all trash
+- [ ] **MOVE** all files from `beta` to `/var/www/gradewars`

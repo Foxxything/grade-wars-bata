@@ -5,20 +5,6 @@
     echo "<script>alert('You are already logged in! ".$_SESSION['AccType']."');</script>";
     header('Location: ../login.php'); // redirect to login
   }
-  
-  echo '<script>alert('."'".$_SESSION['AccType']."'".');</script>';
-
-  function admin() {
-    echo "<script>alert('admin');</script>";
-    $_SESSION['AccType'] = 2; // set session variable
-    header('Location: ../accounts/admin.php'); // redirect to admin
-  }
-
-  function teacher() {
-    echo "<script>alert('teacher');</script>";
-    $_SESSION['AccType'] = 1; // set session variable
-    header('Location: ../accounts/teacher.php'); // redirect to teacher
-  }
 ?>
 
 <!DOCTYPE html>
@@ -41,8 +27,8 @@
             </div>
             <div class="card-body">
               <ul class="list-group">
-                <li id='teacher' class="list-group-item" style="background-color: #165a72; cursor:pointer;" onclick="byeBye('teacher.html')"><a style="color: #fff;">Teacher</a> </li>
-                <li id='admin' class="list-group-item" style="background-color: #165a72; cursor:pointer;" onclick="byeBye('admin.html')"><a style="color: #fff;">Admin</a> </li>
+                <li id='teacher' class="list-group-item" style="background-color: #165a72; cursor:pointer;"><a style="color: #fff;">Teacher</a> </li>
+                <li id='admin' class="list-group-item" style="background-color: #165a72; cursor:pointer;"><a style="color: #fff;">Admin</a> </li>
               </ul>
             </div>
           </div>

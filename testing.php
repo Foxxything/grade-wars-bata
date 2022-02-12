@@ -1,46 +1,30 @@
 <link rel="stylesheet" href="css/bootstrap.css">
 
+<button id='button' class="btn btn-danger">Kill Me</button>
+
+<script>
+  document.getElementById('button').addEventListener('click', function() {
+    console.log('clicked');
+    var http = new XMLHttpRequest();
+    console.log(http);
+    var url = "./testing.php";
+    var params = "test=4";
+    try {
+      http.open("POST", url, true);
+      console.log('opened');
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      http.send(params);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+</script>
+
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once('config.php'); // get the sql connection
-require 'functions.php'; // get the functions
-
-$email = 'f.pinkerton@sjasd.ca';
-$type = 1;
-
-$code = makeCode($email, $type);
-$type = accountType($type, $email);
-$decoded = accountType($type);
-
-$stmt = $conn->prepare("SELECT * FROM pre_user WHERE email = ?");
-  $stmt->bind_param("s", $email);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  $stmt->reset();
-  $stmt->close();
-$rows = $result->num_rows;
-
-if ($rows < 1) {
-  $stmt = $conn->prepare("INSERT INTO pre_user (otp, email, type) VALUES (?, ?, ?)");
-  $stmt->bind_param("sss", $code, $email, $type);
-} else {
-  $stmt = $conn->prepare("UPDATE pre_user SET otp = ?, type = ? WHERE email = ?");
-  $stmt->bind_param("sss", $code, $type, $email);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  echo '<script>console.log("POST")</script>';
 }
-$stmt->execute();
-$stmt->reset();
-$stmt->close();
-
-$card = "+-----------------------------------------------------------+<br>";
-$card .= "| Email: " . $email . "<br>";
-$card .= "| Code: " . $code . "<br>";
-$card .= "| Account type code: " . $type . "<br>";
-$card .= "| Account type: " . implode("|", $decoded) . "<br>";
-$card .= "+----------------------------------------------------------+<br>";
-
-echo $card;
-
-echo "<a href='./user/userJoin.php'>Join</a>";
