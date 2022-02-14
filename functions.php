@@ -1,5 +1,10 @@
 <?php
 require_once 'config.php'; // get the sql connection
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+
+require 'vendor/autoload.php';
+
 
 if (! function_exists('str_ends_with')) {
   function str_ends_with(string $haystack, string $needle): bool
@@ -65,50 +70,63 @@ function makeCode(string $email, string $accountType) { // make the join code
 }
 
 /**
- * @param string $message to send to the admin
- * @param string $subject of the email
+ * @param string $from - the email of the sender ex: 'gradewars' or 'noreply'
+ * @param string $to - the email of the receiver
+ * @param string $subject - the subject of the email
+ * @param string $message - the message of the email
+ * @return bool true if the email was sent and error if it was not
  */
-function messageAdmin(string $subject, string $message) {
-  $to = EMAIL; // send message to admin email
-  $subject = $subject; // subject of the message
-  $message = $message; // message to send
+function sendEmail($from, $to, $subject, $body) {
+  $mail = new PHPMailer();
 
-  // mail heqders
-  $headers = 'X-Priority: 1' . "\r\n";
-  $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
-  $headers .= 'From: ' . ADMIN_FROM . "\r\n";
-  $headers .= "MIME-Version: 1.0\r\n";
-  $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+  //Tell PHPMailer to use SMTP
+  $mail->isSMTP();
+  $mail->SMTPDebug = SMTP::DEBUG_OFF;
 
-  mail($to, $subject, $message, $headers); // send the message
+  $mail->Host = 'box5774.bluehost.com';
+  $mail->Port = 465;
+  $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+  $mail->SMTPAuth = true;
+
+  if ($from == 'noreply') {
+    $mail->Username = 'noreply@foxxything.com';
+    $mail->Password = NO_REPLY;
+    $mail->setFrom('noreply@foxxything.com', 'No Reply');
+  } elseif ($from == 'gradewars') {
+    $mail->Username = 'gradewars@foxxything.com';
+    $mail->Password = GRADE_WARS;
+    $mail->setFrom('gradewars@foxxything.com', 'Grade Wars');
+  } else {
+    throw new Exception('Invalid sender');
+  }
+
+  $mail->addAddress($to);
+  $mail->Subject = $subject;
+  $mail->msgHTML($body);
+
+  if (!$mail->send()) {
+    return $mail->ErrorInfo;
+  } else {
+    return true;
+  }
+  $mail->smtpClose();
 }
 
-/**
- * @param string $email of the user
- * @param string $subject of the email
- * @param string $message to send to the user
- */
-function sendEmail(string $email, string $subject, string $message) {
-  $to = $email; // send message to admin email
-  $subject = $subject; // subject of the message
-  $message = $message; // message to send
-
-  // mail heqders
-  $headers = 'X-Priority: 1' . "\r\n";
-  $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
-  $headers .= 'From: ' . FROM . "\r\n";
-  $headers .= "MIME-Version: 1.0\r\n";
-  $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-
-  mail($to, $subject, $message, $headers);
+function logger($message) {
+{
+  $admin = 'gradewars@foxxything.com';
+  $subject = 'Logger';
+  $body = $message;
+  sendEmail('noreply', $admin, $subject, $body);
 }
 
 /**
  * @param string $email of the new user
  * @param int $type of the new user
+ * @param string $madeBy the email of the person who made the account
  * @description: create a new user and emails both admin and user
  */
-function newUser(string $email, int $type) { // create a new pre_user
+function newUser(string $email, int $type, string $madeBy) { // create a new pre_user
 
   $code = makeCode($email, $type); // make the join code
   $accountType = accountType($type, $email); // make the account type
@@ -130,6 +148,7 @@ function newUser(string $email, int $type) { // create a new pre_user
       </a>
     </p>
   ";
+  echo $message;
 
   $adminMessage = "
     <h1>New User</h1>
@@ -139,9 +158,11 @@ function newUser(string $email, int $type) { // create a new pre_user
       Email: $email
       <br>
       Account Type: $type
+      <br>
+      Made By: $madeBy
     </p>
   ";
 
-  messageAdmin("New User", $adminMessage);
-  sendEmail($email, "Welcome to GradeWars!", $message);
+  sendEmail('noreply', $email, 'Welcome to GradeWars', $message); // send email to user
+  logger($adminMessage); // log the new user
 }
