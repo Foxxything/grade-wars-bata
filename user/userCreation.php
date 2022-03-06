@@ -22,7 +22,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../../css/bootstrap.css">
     <title id='title'>Create User</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
@@ -144,7 +144,10 @@
 
             // redirect to login page
             //echo "<script>alert('old code deleted successfully');</script>";
-            echo "<script>window.location.href = '../login.php';</script>";
+            require_once('../functions.php');
+            populateTables($email);
+            header("Location: ../login.php");
+            die();
           } else { // if the email does not match the join code
             echo "<script>alert('Email does not match the join code');</script>";
           }

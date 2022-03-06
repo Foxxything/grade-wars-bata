@@ -89,21 +89,17 @@ function sendEmail($from, $to, $subject, $body) {
   $mail->SMTPAuth = true;
 
   if ($from == 'noreply') {
-    $mail->Username = 'noreply@foxxything.com';
+    $mail->Username = 'noreply@cshcgradewars.com';
     $mail->Password = NO_REPLY;
-    $mail->setFrom('noreply@foxxything.com', 'No Reply');
-  } elseif ($from == 'gradewars') {
-    $mail->Username = 'gradewars@foxxything.com';
-    $mail->Password = GRADE_WARS;
-    $mail->setFrom('gradewars@foxxything.com', 'Grade Wars');
+    $mail->setFrom('noreply@cshcgradewars.com', 'No Reply');
+  } elseif ($from == 'admin') {
+    $mail->Username = 'admin@cshcgradewars.com';
+    $mail->Password = ADMIN;
+    $mail->setFrom('admin@cshcgradewars.com', 'Grade Wars');
   } else {
     throw new Exception('Invalid sender');
   }
-<<<<<<< HEAD
   $mail->addCustomHeader('X-mailer', 'X-Mailer: PHP/' . phpversion(). 'SCHS Gradewars Program');
-=======
-
->>>>>>> 34c0e196bad4b1f995e8b31c714acde77433a10f
   $mail->addAddress($to);
   $mail->Subject = $subject;
   $mail->msgHTML($body);
@@ -117,18 +113,26 @@ function sendEmail($from, $to, $subject, $body) {
 }
 
 function logger($message) {
-<<<<<<< HEAD
-  $admin = 'gradewars@foxxything.com';
+  $admin = 'admin@cshcgradewars.com';
   $subject = 'Logger';
   $body = $message;
-  sendEmail('gradewars', $admin, $subject, $body);
-=======
-{
-  $admin = 'gradewars@foxxything.com';
-  $subject = 'Logger';
-  $body = $message;
-  sendEmail('noreply', $admin, $subject, $body);
->>>>>>> 34c0e196bad4b1f995e8b31c714acde77433a10f
+  sendEmail('admin', $admin, $subject, $body);
+}
+
+function DBlogger($type, $message) {
+  $conn = $GLOBALS['conn'];
+  $type = $conn->real_escape_string($type);
+  $message = $conn->real_escape_string($message);
+  $data = json_decode($message);
+  if (is_null($data)) {
+    // $message is not json
+    $json = ['message' => $message];
+    $message = json_encode($json);
+  }
+  $sql = "INSERT INTO `logs` (`type`, `message`) VALUES (?, ?)";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param('ss', $type, $message);
+
 }
 
 /**
@@ -176,4 +180,89 @@ function newUser(string $email, int $type, string $madeBy) { // create a new pre
 
   sendEmail('noreply', $email, 'Welcome to GradeWars', $message); // send email to user
   logger($adminMessage); // log the new user
+}
+
+function populateTables($email) {
+  $studentCounted = [
+    'pre_student_count',
+    'counted_student_count',
+  ];
+  $foodhamper = [
+    'pre_food_hamper',
+    'counted_food_hamper'
+  ];
+  foreach ($studentCounted as $table) {
+    $stmt = $GLOBALS['conn']->prepare("INSERT INTO $table (teacher_email) VALUES (?)");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->reset();
+    $stmt->close();
+  }
+  foreach ($foodhamper as $table) {
+    for ($grade = 9; $grade <= 12; $grade++) {
+      $sql = "INSERT INTO $table (
+        teacher_email,
+        `non_perishable_food_Items`,
+        peanut_butter,
+        `toilet_paper_paper_towel`,
+        `toothbrush_toothpaste_floss`,
+        box_or_bag_of_feminine_products,
+        `new_socks_new_underwear`,
+        `laudry_soap_fabric_softner`,
+        childrens_book,
+        grade
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $stmt = $GLOBALS['conn']->prepare($sql);
+      $zero = 0;
+      $stmt->bind_param("siiiiiiiii", $email, $zero, $zero, $zero, $zero, $zero, $zero, $zero, $zero, $grade);
+      $stmt->execute();
+      $stmt->reset();
+      $stmt->close();
+    }
+  }
+}
+
+/**
+ * @param string $email of the deleted user
+ * @param string $whoAuthorized the email of the person who authorized the deletion
+ */
+function DeleteUser($email, $whoAuthorized) {
+  $tables = [
+    'pre_user',
+    'pre_student_count',
+    'pre_food_hamper',
+    'counted_student_count',
+    'counted_food_hamper',
+    'users'
+  ];
+  foreach ($tables as $table) {
+    $stmt = $GLOBALS['conn']->prepare("DELETE FROM $table WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->reset();
+    $stmt->close();
+  }
+  $adminMessage = "
+    <h1>User Deleted</h1>
+    <p>
+      A user has been deleted from the GradeWars Program.
+      <br>
+      Email: $email
+      <br>
+      Deleted By: $whoAuthorized
+    </p>
+  ";
+  logger($adminMessage);
+  
+  $clientMessage = "
+    <h1>User Deleted</h1>
+    <p>
+      Your account has been deleted from the GradeWars Program.<br>
+      Please contact the administrator if you believe this is an error.
+      <a href='mailto:admin@cshcgradewars.com?subject=User Deleted'>
+        Contact Admin
+      </a>
+    </p>
+  ";
+  sendEmail('noreply', $email, 'User Deleted', $clientMessage);
 }

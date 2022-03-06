@@ -1,3 +1,15 @@
+<?php
+  session_start(); // start session
+
+  if ($_SESSION['AccType'] != 1 ) { // if not both account type
+    header('Location: ../login.php'); // redirect to login
+  }
+
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -5,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Teacher Veiw</title>
-    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../../css/bootstrap.css">
     <style>
       /* Chrome, Safari, Edge, Opera */
       input::-webkit-outer-spin-button,
@@ -26,56 +38,37 @@
       <div style="margin-top: 20px;">
       <div class="row">
         <div class="col-md-9">
-          <div class="card">
-            <div class="card-header">
-              <h4 id='header'>Your class points</h4>
-            </div>
-            <div class="card-body">
-              <div class='row'>
-                <!-- grade 9 input-->
-                <div class="col-sm-6 col-12 d-flex align-items-center"> 
-                  <label for="gr9Points" class="m-0">Grade 9 points</label>
-                </div>
-                <div class="col-sm-6 col-12">
-                  <input type="number" id="gr9Points" placeholder="Enter Points" class="form-control"/>
-                  <div style="margin-top: 5px;"></div>
-                </div>
+         <?php
+            // get event info from api
+            
+            function fetchOldestEvent($conn) {
+              $ch = curl_init();
+              curl_setopt($ch, CURLOPT_URL, "http://192.168.100.190:8080/beta/endpoints/activeEvent.php");
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              $output = curl_exec($ch);
+              curl_close($ch);
+              $events = json_decode($output, true);
 
-                <!-- grade 10 input-->
-                <div class="col-sm-6 col-12 d-flex align-items-center"> 
-                  <label for="gr10Points" class="m-0">Grade 10 points</label>
-                </div>
-                <div class="col-sm-6 col-12">
-                  <input type="number" id="gr10Points" placeholder="Enter Points" class="form-control"/>
-                  <div style="margin-top: 5px;"></div>
-                </div>
-
-                <!-- grade 11 input-->
-                <div class="col-sm-6 col-12 d-flex align-items-center"> 
-                  <label for="gr11Points" class="m-0">Grade 11 points</label>
-                </div>
-                <div class="col-sm-6 col-12">
-                  <input type="number" id="gr11Points" placeholder="Enter Points" class="form-control"/>
-                  <div style="margin-top: 5px;"></div>
-                </div>
-
-                <!-- grade 12 input-->
-                <div class="col-sm-6 col-12 d-flex align-items-center"> 
-                  <label for="gr12Points" class="m-0">Grade 12 points</label>
-                </div>
-                <div class="col-sm-6 col-12">
-                  <input type="number" id="gr12Points" placeholder="Enter Points" class="form-control"/>
-                  <div style="margin-top: 5px;"></div>
-                </div>
-              </div>
+              $oldestEvent = $events[0];
+              $eventEndDate = strtotime($oldestEvent['endDate']);
+              $eventStartDate = strtotime($oldestEvent['startDate']);
               
-              <div id='buttons' class='d-flex align-items-center'>
-                <button class="btn btn-primary" id="submit">Submit</button>
-                <div style="margin-left: 5px;"></div>
-                <button class="btn btn-danger" id="reset">Reset</button>
-              </div>
-            </div>
-          </div>
+              $isOver = $EventEndDate < time() ? true : false;
+              $hasPass = $EventStartDate < time() ? true : false;
+              $isActive = $EventStartDate <= time() && $EventEndDate >= time() ? true : false;
+
+              if($isOver) {
+                $stmt = $conn->prepare("DELETE FROM event WHERE id = ?");
+                $stmt->bind_param("i", $oldestEvent['id']);
+                $stmt->execute();
+                $stmt->close();
+                fetchOldestEvent($conn, $events);
+              } else {
+                return $oldestEvent;
+              }
+            }
+
+         ?>
         </div>
         <!-- right side of the screen -->
         <div class="col-md-3">

@@ -2,7 +2,6 @@
   session_start(); // start session
 
   if ($_SESSION['AccType'] != 3 ) { // if not both account type
-    echo "<script>alert('You are already logged in! ".$_SESSION['AccType']."');</script>";
     header('Location: ../login.php'); // redirect to login
   }
 ?>
@@ -14,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Selecter</title>
-    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../../css/bootstrap.css">
   </head>
   <body>
     <div class="container h-100">
@@ -26,10 +25,16 @@
               <h1 class="text-center">Navagation</h1>
             </div>
             <div class="card-body">
-              <ul class="list-group">
-                <li id='teacher' class="list-group-item" style="background-color: #165a72; cursor:pointer;"><a style="color: #fff;">Teacher</a> </li>
-                <li id='admin' class="list-group-item" style="background-color: #165a72; cursor:pointer;"><a style="color: #fff;">Admin</a> </li>
-              </ul>
+              <form action='both.php' method='post'>
+                <div class="row">
+                  <div class="col-6">
+                    <input name='admin' type='submit' class="btn btn-primary btn-block" value='Admin'></input>
+                  </div>
+                  <div class="col-6">
+                    <input name='teacher' type='submit' class="btn btn-primary btn-block" value='Teacher'></input>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -37,3 +42,13 @@
     </div>
   </body>
 </html>
+
+<?php
+
+  if (isset($_POST['admin'])) {
+    $_SESSION['AccType'] = 2;
+    header('Location: admin.php');
+  } elseif (isset($_POST['teacher'])) {
+    $_SESSION['AccType'] = 1;
+    header('Location: teacher.php');
+  }

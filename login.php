@@ -6,16 +6,12 @@
   session_start();
   // if session var accType is 1 (teacher) or 2 (admin) or 3 (both) then redirect to dashboard
   if (isset($_SESSION['AccType'])) {
-    echo "<script>alert('You are already logged in! ".$_SESSION['AccType']."');</script>";
     if ($_SESSION['AccType'] == 1) {
-      echo "<script>alert('login line 10')</script>";
-      //header('Location: ./accounts/teacher.html');
+      header('Location: ./accounts/teacher.php');
     } else if ($_SESSION['AccType'] == 2) {
-      echo "<script>alert('login line 13')</script>";
-      //header('Location: ./accounts/admin.html');
+      header('Location: ./accounts/admin.php');
     } else if ($_SESSION['AccType'] == 3) {
-      echo "<script>alert('login line 16')</script>";
-      //header('Location: ./accounts/both.php');
+      header('Location: ./accounts/both.php');
     }
   }
 ?>
@@ -27,11 +23,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="../css/bootstrap.css">
 </head>
 <body>
   <div style="margin-top: 10px;"></div>
-  <div style="text-align: center;">
+  <center>
     <div class="card" style="width: 40%;">
       <div class="card-header">
         <h3>Login</h3>
@@ -54,7 +50,7 @@
         </form>
       </div>
     </div>
-  </div>
+  </center>
 </body>
 </html>
 
@@ -102,7 +98,7 @@
           // send email to admin
           $subject = 'Email Mismatch from '.$email;
           $message = 'The email address '.$email.' was used to login but the email address '.$decryptedEmail.' was stored in the database. Requested by '.$_SERVER['REMOTE_ADDR'] . ' on ' . date('Y-m-d H:i:s'). '. Please resolve this issue as soon as possible.';
-          messageAdmin($subject, $message);
+          sendEmail('gradewars', 'gradewars@foxxything.com', $subject, $message);
           die();
         }
         echo '<script>console.log("Email correct")</script>';
